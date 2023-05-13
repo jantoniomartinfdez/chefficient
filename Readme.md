@@ -15,7 +15,7 @@ List of main requirements:
 	
 Glossary of terms:
 	- Recipe: a set of ingredients, instructions and optionally recommendations in order to elaborate a dish. It also contains a title, sometimes followed by a description to be easily identified.
-	- Recipe group: same as "food menu" or "menu list", with fixed amount of recipes based on frequency (daily, weekly or monthly).
+	- Recipe group: same as "menu", with fixed amount of recipes based on frequency (daily, weekly or monthly).
 	- Ingredient: a certain amount of food used as part of a recipe.
 	- Inventory: same as "pantry", a.k.a "Food Repository" here.
 	- Food: standalone and concrete edible item, used for one or many ingredients.
