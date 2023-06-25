@@ -1,5 +1,11 @@
 package jamf.chefficient.domain.shared
 
-enum class Type {
-    KILO
+import java.util.*
+
+enum class Type(val internalValue: String) {
+    KILO("kg");
+
+    companion object {
+        fun from(string: String): Type = values().find { it.internalValue == string.lowercase(Locale.getDefault()) }!!
+    }
 }
