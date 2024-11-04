@@ -1,3 +1,3 @@
 package jamf.chefficient.domain.recipe
 
-class MissingTitle : Exception()
+class MissingTitle(message: String) : Exception()
