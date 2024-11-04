@@ -25,4 +25,11 @@ internal class RecipeTest {
     fun `should allow an alphanumeric title`() {
         assertEquals("French omelette", Recipe.create("French omelette").title)
     }
+    @Test
+    fun `may have a description`() {
+        assertEquals(
+            "The easiest recipe ever!",
+            Recipe.create("French omelette", "The easiest recipe ever!").description
+        )
+    }
 }
