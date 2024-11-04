@@ -12,4 +12,12 @@ internal class RecipeTest {
             "Recipes must have an alphanumeric title"
         )
     }
+    @Test
+    fun `should not allow a blank title`() {
+        assertThrows(
+            MissingTitle::class.java,
+            { Recipe.create(" ") },
+            "Recipes must have an alphanumeric title"
+        )
+    }
 }
