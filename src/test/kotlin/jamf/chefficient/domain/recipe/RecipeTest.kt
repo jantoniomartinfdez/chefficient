@@ -32,4 +32,11 @@ internal class RecipeTest {
             Recipe.create("French omelette", "The easiest recipe ever!").description
         )
     }
+    @Test
+    fun `may not have a description`() {
+        assertEquals(
+            "",
+            Recipe.create("French omelette").description
+        )
+    }
 }
