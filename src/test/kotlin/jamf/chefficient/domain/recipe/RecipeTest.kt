@@ -50,4 +50,14 @@ internal class RecipeTest {
             ).recommendation
         )
     }
+    @Test
+    fun `may not have a recommendation`() {
+        assertEquals(
+            "",
+            Recipe.create(
+                "French omelette",
+                "The easiest recipe ever!"
+            ).recommendation
+        )
+    }
 }
