@@ -7,62 +7,27 @@ import org.junit.jupiter.api.Test
 internal class RecipeTest {
     @Test
     fun `should not allow an empty title`() {
-        assertThrows(
-            MissingTitle::class.java,
-            { Recipe.create("") },
-            "Recipes must have an alphanumeric title"
-        )
+        val exception = assertThrows(
+            MissingTitle::class.java
+        ) { Recipe.create("", listOf("1 egg")) }
+
+        assertEquals("Recipes must have an alphanumeric title", exception.message)
     }
+
     @Test
     fun `should not allow a blank title`() {
-        assertThrows(
-            MissingTitle::class.java,
-            { Recipe.create(" ") },
-            "Recipes must have an alphanumeric title"
-        )
+        val exception = assertThrows(
+            MissingTitle::class.java
+        ) { Recipe.create(" ", listOf("1 egg")) }
+
+        assertEquals("Recipes must have an alphanumeric title", exception.message)
     }
+
     @Test
     fun `should allow an alphanumeric title`() {
-        assertEquals("French omelette", Recipe.create("French omelette", "", "", listOf("1 egg")).title)
+        assertEquals("French omelette", Recipe.create("French omelette", listOf("1 egg")).title)
     }
-    @Test
-    fun `may have a description`() {
-        assertEquals(
-            "The easiest recipe ever!",
-            Recipe.create("French omelette", "The easiest recipe ever!", "", listOf("1 egg")).description
-        )
-    }
-    @Test
-    fun `may not have a description`() {
-        assertEquals(
-            "",
-            Recipe.create("French omelette", "", "", listOf("1 egg")).description
-        )
-    }
-    @Test
-    fun `may have a recommendation`() {
-        assertEquals(
-            "Please, use fresh eggs whenever possible",
-            Recipe.create(
-                "French omelette",
-                "The easiest recipe ever!",
-                "Please, use fresh eggs whenever possible",
-                listOf("1 egg")
-            ).recommendation
-        )
-    }
-    @Test
-    fun `may not have a recommendation`() {
-        assertEquals(
-            "",
-            Recipe.create(
-                "French omelette",
-                "The easiest recipe ever!",
-                "",
-                listOf("1 egg")
-            ).recommendation
-        )
-    }
+
     @Test
     fun `should not allow to contain no ingredients at all`() {
         val exception = assertThrows(
@@ -70,13 +35,51 @@ internal class RecipeTest {
         ) {
             Recipe.create(
                 "French omelette",
-                "",
-                "",
-                listOf<String>()
+                listOf()
             )
         }
 
         assertEquals("Recipes must contain at least one ingredient!", exception.message)
     }
 
+    @Test
+    fun `may have a description`() {
+        assertEquals(
+            "The easiest recipe ever!",
+            Recipe.create("French omelette", listOf("1 egg"), "The easiest recipe ever!").description
+        )
+    }
+
+    @Test
+    fun `may not have a description`() {
+        assertEquals(
+            "",
+            Recipe.create("French omelette", listOf("1 egg")).description
+        )
+    }
+
+    @Test
+    fun `may have a recommendation`() {
+        assertEquals(
+            "Please, use fresh eggs whenever possible",
+            Recipe.create(
+                "French omelette",
+                listOf("1 egg"),
+                "The easiest recipe ever!",
+                "Please, use fresh eggs whenever possible"
+            ).recommendation
+        )
+    }
+
+    @Test
+    fun `may not have a recommendation`() {
+        assertEquals(
+            "",
+            Recipe.create(
+                "French omelette",
+                listOf("1 egg"),
+                "The easiest recipe ever!"
+            ).recommendation
+        )
+    }
 }
