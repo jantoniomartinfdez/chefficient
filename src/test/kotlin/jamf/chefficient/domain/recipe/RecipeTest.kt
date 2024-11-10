@@ -60,4 +60,20 @@ internal class RecipeTest {
             ).recommendation
         )
     }
+    @Test
+    fun `should not allow to contain no ingredients at all`() {
+        assertThrows(
+            MissingAtLeastOneIngredient::class.java,
+            {
+                Recipe.create(
+                    "French omelette",
+                    "",
+                    "",
+                    listOf<String>()
+                )
+            },
+            "Recipes must contain at least one ingredient!"
+        )
+    }
+
 }
