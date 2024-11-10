@@ -39,4 +39,15 @@ internal class RecipeTest {
             Recipe.create("French omelette").description
         )
     }
+    @Test
+    fun `may have a recommendation`() {
+        assertEquals(
+            "Please, use fresh eggs whenever possible",
+            Recipe.create(
+                "French omelette",
+                "The easiest recipe ever!",
+                "Please, use fresh eggs whenever possible"
+            ).recommendation
+        )
+    }
 }
