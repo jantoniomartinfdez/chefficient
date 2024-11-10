@@ -23,20 +23,20 @@ internal class RecipeTest {
     }
     @Test
     fun `should allow an alphanumeric title`() {
-        assertEquals("French omelette", Recipe.create("French omelette").title)
+        assertEquals("French omelette", Recipe.create("French omelette", "", "", listOf("1 egg")).title)
     }
     @Test
     fun `may have a description`() {
         assertEquals(
             "The easiest recipe ever!",
-            Recipe.create("French omelette", "The easiest recipe ever!").description
+            Recipe.create("French omelette", "The easiest recipe ever!", "", listOf("1 egg")).description
         )
     }
     @Test
     fun `may not have a description`() {
         assertEquals(
             "",
-            Recipe.create("French omelette").description
+            Recipe.create("French omelette", "", "", listOf("1 egg")).description
         )
     }
     @Test
@@ -46,7 +46,8 @@ internal class RecipeTest {
             Recipe.create(
                 "French omelette",
                 "The easiest recipe ever!",
-                "Please, use fresh eggs whenever possible"
+                "Please, use fresh eggs whenever possible",
+                listOf("1 egg")
             ).recommendation
         )
     }
@@ -56,24 +57,26 @@ internal class RecipeTest {
             "",
             Recipe.create(
                 "French omelette",
-                "The easiest recipe ever!"
+                "The easiest recipe ever!",
+                "",
+                listOf("1 egg")
             ).recommendation
         )
     }
     @Test
     fun `should not allow to contain no ingredients at all`() {
-        assertThrows(
+        val exception = assertThrows(
             MissingAtLeastOneIngredient::class.java,
-            {
-                Recipe.create(
-                    "French omelette",
-                    "",
-                    "",
-                    listOf<String>()
-                )
-            },
-            "Recipes must contain at least one ingredient!"
-        )
+        ) {
+            Recipe.create(
+                "French omelette",
+                "",
+                "",
+                listOf<String>()
+            )
+        }
+
+        assertEquals("Recipes must contain at least one ingredient!", exception.message)
     }
 
 }
