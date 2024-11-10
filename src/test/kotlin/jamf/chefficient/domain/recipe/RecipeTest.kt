@@ -43,6 +43,17 @@ internal class RecipeTest {
     }
 
     @Test
+    fun `should be made of ingredients`() {
+        assertEquals(
+            listOf("2 eggs", "1 pinch of salt", "1 teaspoon of olive oil"),
+            Recipe.create(
+                "French omelette",
+                listOf("2 eggs", "1 pinch of salt", "1 teaspoon of olive oil")
+            ).ingredients
+        )
+    }
+
+    @Test
     fun `may have a description`() {
         assertEquals(
             "The easiest recipe ever!",
