@@ -1,20 +1,24 @@
 package jamf.chefficient.domain.shared
 
 import java.math.BigDecimal
-import java.util.*
 
 class Quantity(private val amount: Float, private val type: Type) {
     override fun toString(): String {
-        return String.format("%s %s", formatAmount(), formatType())
+        return String.format("%s %s", formatAmount(), formatType()).trim()
+    }
+
+    fun isOneItem(): Boolean = amount.toInt() == 1
+
+    fun isCardinal(): Boolean {
+        return type == Type.UNIT
     }
 
     private fun formatType(): String {
-        val typeInStringFormat = type.toString().lowercase(Locale.getDefault())
-        if (amount.toInt() == 1) {
-            return typeInStringFormat
+        if (isOneItem()) {
+            return type.singularFormat()
         }
 
-        return typeInStringFormat + "s"
+        return type.pluralFormat()
     }
 
     private fun formatAmount(): String {

@@ -9,7 +9,7 @@ internal class RecipeTest {
     fun `should not allow an empty title`() {
         val exception = assertThrows(
             MissingTitle::class.java
-        ) { Recipe.create("", listOf("1 egg")) }
+        ) { Recipe.create("", listOf(Pair("1", "egg"))) }
 
         assertEquals("Recipes must have an alphanumeric title", exception.message)
     }
@@ -18,14 +18,14 @@ internal class RecipeTest {
     fun `should not allow a blank title`() {
         val exception = assertThrows(
             MissingTitle::class.java
-        ) { Recipe.create(" ", listOf("1 egg")) }
+        ) { Recipe.create(" ", listOf(Pair("1", "egg"))) }
 
         assertEquals("Recipes must have an alphanumeric title", exception.message)
     }
 
     @Test
     fun `should allow an alphanumeric title`() {
-        assertEquals("French omelette", Recipe.create("French omelette", listOf("1 egg")).title)
+        assertEquals("French omelette", Recipe.create("French omelette", listOf(Pair("1", "egg"))).title)
     }
 
     @Test
@@ -44,12 +44,14 @@ internal class RecipeTest {
 
     @Test
     fun `should be made of ingredients`() {
+        val ingredients = listOf("2 eggs", "1 pinch of salt", "1 teaspoon of olive oil")
+
         assertEquals(
-            listOf("2 eggs", "1 pinch of salt", "1 teaspoon of olive oil"),
+            ingredients,
             Recipe.create(
                 "French omelette",
-                listOf("2 eggs", "1 pinch of salt", "1 teaspoon of olive oil")
-            ).ingredients
+                listOf(Pair("2", "egg"), Pair("1 pinch", "salt"), Pair("1 teaspoon", "olive oil"))
+            ).ingredients()
         )
     }
 
@@ -57,7 +59,7 @@ internal class RecipeTest {
     fun `may have a description`() {
         assertEquals(
             "The easiest recipe ever!",
-            Recipe.create("French omelette", listOf("1 egg"), "The easiest recipe ever!").description
+            Recipe.create("French omelette", listOf(Pair("1", "egg")), "The easiest recipe ever!").description
         )
     }
 
@@ -65,7 +67,7 @@ internal class RecipeTest {
     fun `may not have a description`() {
         assertEquals(
             "",
-            Recipe.create("French omelette", listOf("1 egg")).description
+            Recipe.create("French omelette", listOf(Pair("1", "egg"))).description
         )
     }
 
@@ -75,7 +77,7 @@ internal class RecipeTest {
             "Please, use fresh eggs whenever possible",
             Recipe.create(
                 "French omelette",
-                listOf("1 egg"),
+                listOf(Pair("1", "egg")),
                 "The easiest recipe ever!",
                 "Please, use fresh eggs whenever possible"
             ).recommendation
@@ -88,7 +90,7 @@ internal class RecipeTest {
             "",
             Recipe.create(
                 "French omelette",
-                listOf("1 egg"),
+                listOf(Pair("1", "egg")),
                 "The easiest recipe ever!"
             ).recommendation
         )
