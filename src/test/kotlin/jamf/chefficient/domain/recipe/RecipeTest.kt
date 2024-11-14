@@ -9,7 +9,7 @@ internal class RecipeTest {
     fun `should not allow an empty title`() {
         val exception = assertThrows(
             MissingTitle::class.java
-        ) { Recipe.create("", listOf(Pair("egg", "3"))) }
+        ) { Recipe.create("", listOf(Pair("egg", "3")), listOf("Sample instruction")) }
 
         assertEquals("Recipes must have an alphanumeric title", exception.message)
     }
@@ -18,7 +18,7 @@ internal class RecipeTest {
     fun `should not allow a blank title`() {
         val exception = assertThrows(
             MissingTitle::class.java
-        ) { Recipe.create(" ", listOf(Pair("egg", "3"))) }
+        ) { Recipe.create(" ", listOf(Pair("egg", "3")), listOf("Sample instruction")) }
 
         assertEquals("Recipes must have an alphanumeric title", exception.message)
     }
@@ -27,7 +27,7 @@ internal class RecipeTest {
     fun `should allow an alphanumeric title`() {
         assertEquals(
             "French omelette",
-            Recipe.create("French omelette", listOf(Pair("egg", "3"))).title
+            Recipe.create("French omelette", listOf(Pair("egg", "3")), listOf("Sample instruction")).title
         )
     }
 
@@ -38,7 +38,8 @@ internal class RecipeTest {
         ) {
             Recipe.create(
                 "French omelette",
-                listOf()
+                listOf(),
+                listOf("Sample instruction")
             )
         }
 
@@ -58,16 +59,38 @@ internal class RecipeTest {
                     Pair("salt", "2 pinches"),
                     Pair("black pepper", "1 pinch"),
                     Pair("olive oil", "2 teaspoons")
-                )
+                ),
+                listOf("Sample instruction")
             ).ingredients()
         )
     }
 
     @Test
+    fun `should not allow to contain no steps at all`() {
+        val exception = assertThrows(
+            MissingAtLeastOneStep::class.java,
+        ) {
+            Recipe.create(
+                "French omelette",
+                listOf(Pair("egg", "3")),
+                listOf()
+            )
+        }
+
+        assertEquals("Recipes must contain at least one step in order to be made!", exception.message)
+    }
+
+
+    @Test
     fun `may have a description`() {
         assertEquals(
             "The easiest recipe ever!",
-            Recipe.create("French omelette", listOf(Pair("egg", "3")), "The easiest recipe ever!").description
+            Recipe.create(
+                "French omelette",
+                listOf(Pair("egg", "3")),
+                listOf("Sample instruction"),
+                "The easiest recipe ever!"
+            ).description
         )
     }
 
@@ -75,7 +98,7 @@ internal class RecipeTest {
     fun `may not have a description`() {
         assertEquals(
             "",
-            Recipe.create("French omelette", listOf(Pair("egg", "3"))).description
+            Recipe.create("French omelette", listOf(Pair("egg", "3")), listOf("Sample instruction")).description
         )
     }
 
@@ -86,6 +109,7 @@ internal class RecipeTest {
             Recipe.create(
                 "French omelette",
                 listOf(Pair("egg", "3")),
+                listOf("Sample instruction"),
                 "The easiest recipe ever!",
                 "Please, use fresh eggs whenever possible"
             ).recommendation
@@ -99,6 +123,7 @@ internal class RecipeTest {
             Recipe.create(
                 "French omelette",
                 listOf(Pair("egg", "3")),
+                listOf("Sample instruction"),
                 "The easiest recipe ever!"
             ).recommendation
         )

@@ -14,6 +14,7 @@ class Recipe private constructor(
         fun create(
             title: String,
             rowIngredients: List<Pair<String, String>>,
+            steps: List<String>,
             description: String = "",
             recommendation: String = ""
         ): Recipe {
@@ -23,6 +24,10 @@ class Recipe private constructor(
 
             if (rowIngredients.isEmpty()) {
                 throw MissingAtLeastOneIngredient("Recipes must contain at least one ingredient!")
+            }
+
+            if (steps.isEmpty()) {
+                throw MissingAtLeastOneStep("Recipes must contain at least one step in order to be made!")
             }
 
             val ingredients = rowIngredients.map { Ingredient.create(it.first, it.second) }
