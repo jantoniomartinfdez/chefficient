@@ -9,7 +9,7 @@ internal class RecipeTest {
     fun `should not allow an empty title`() {
         val exception = assertThrows(
             MissingTitle::class.java
-        ) { Recipe.create("", listOf(Pair("1", "egg"))) }
+        ) { Recipe.create("", listOf(Pair("egg", "3"))) }
 
         assertEquals("Recipes must have an alphanumeric title", exception.message)
     }
@@ -18,14 +18,17 @@ internal class RecipeTest {
     fun `should not allow a blank title`() {
         val exception = assertThrows(
             MissingTitle::class.java
-        ) { Recipe.create(" ", listOf(Pair("1", "egg"))) }
+        ) { Recipe.create(" ", listOf(Pair("egg", "3"))) }
 
         assertEquals("Recipes must have an alphanumeric title", exception.message)
     }
 
     @Test
     fun `should allow an alphanumeric title`() {
-        assertEquals("French omelette", Recipe.create("French omelette", listOf(Pair("1", "egg"))).title)
+        assertEquals(
+            "French omelette",
+            Recipe.create("French omelette", listOf(Pair("egg", "3"))).title
+        )
     }
 
     @Test
@@ -64,7 +67,7 @@ internal class RecipeTest {
     fun `may have a description`() {
         assertEquals(
             "The easiest recipe ever!",
-            Recipe.create("French omelette", listOf(Pair("1", "egg")), "The easiest recipe ever!").description
+            Recipe.create("French omelette", listOf(Pair("egg", "3")), "The easiest recipe ever!").description
         )
     }
 
@@ -72,7 +75,7 @@ internal class RecipeTest {
     fun `may not have a description`() {
         assertEquals(
             "",
-            Recipe.create("French omelette", listOf(Pair("1", "egg"))).description
+            Recipe.create("French omelette", listOf(Pair("egg", "3"))).description
         )
     }
 
@@ -82,7 +85,7 @@ internal class RecipeTest {
             "Please, use fresh eggs whenever possible",
             Recipe.create(
                 "French omelette",
-                listOf(Pair("1", "egg")),
+                listOf(Pair("egg", "3")),
                 "The easiest recipe ever!",
                 "Please, use fresh eggs whenever possible"
             ).recommendation
@@ -95,7 +98,7 @@ internal class RecipeTest {
             "",
             Recipe.create(
                 "French omelette",
-                listOf(Pair("1", "egg")),
+                listOf(Pair("egg", "3")),
                 "The easiest recipe ever!"
             ).recommendation
         )
