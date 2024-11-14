@@ -6,7 +6,7 @@ import java.util.*
 
 class Food private constructor(private val name: String, private val quantity: Quantity) {
     fun description(): String {
-        return String.format("%s of %s in bulk", quantity.toString(), formatName())
+        return String.format("%s of %s in bulk", quantity.description(), formatName())
     }
 
     private fun formatName(): String {
@@ -22,7 +22,7 @@ class Food private constructor(private val name: String, private val quantity: Q
             val amount = quantity.split(" ").first().toFloat()
             val quantityType = quantity.split(" ").last()
 
-            return Food(name, Quantity(amount, Type.from(quantityType)))
+            return Food(name, Quantity(amount, Type.create(quantityType)))
         }
     }
 }

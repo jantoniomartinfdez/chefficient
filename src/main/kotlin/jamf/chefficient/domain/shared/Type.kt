@@ -2,14 +2,19 @@ package jamf.chefficient.domain.shared
 
 import java.util.*
 
-enum class Type(val measurementAbbreviation: String) {
-    UNIT(""),
-    KILO("kg"),
-    PINCH("pinch"),
-    TEASPOON("teaspoon");
+enum class Type(val measurementAbbreviationInSingular: String, val measurementAbbreviationInPlural: String) {
+    UNIT("", ""),
+    KILO("kg", "kgs"),
+    PINCH("pinch", "pinches"),
+    TEASPOON("teaspoon", "teaspoons");
 
     fun singularFormat(): String {
-        return measurementAbbreviation.lowercase(Locale.getDefault())
+        // TODO: missing test/functionality for the below if statement
+//        if (this == UNIT) {
+//            return ""
+//        }
+
+        return measurementAbbreviationInSingular
     }
 
     fun pluralFormat(): String {
@@ -17,15 +22,15 @@ enum class Type(val measurementAbbreviation: String) {
             return ""
         }
 
-        val nameInLowerCase = measurementAbbreviation.lowercase(Locale.getDefault())
-
-        return when(nameInLowerCase.last()) {
-            'a', 'e', 'i', 'o', 'u' -> nameInLowerCase.plus("es")
-            else -> nameInLowerCase.plus("s")
-        }
+        return measurementAbbreviationInPlural
     }
 
     companion object {
-        fun from(string: String): Type = values().find { it.measurementAbbreviation == string.lowercase(Locale.getDefault()) } ?: UNIT
+        fun create(type: String): Type {
+            return values().find {
+                it.measurementAbbreviationInSingular == type.lowercase(Locale.getDefault())
+                || it.measurementAbbreviationInPlural == type.lowercase( Locale.getDefault())
+            } ?: UNIT
+        }
     }
 }

@@ -44,13 +44,18 @@ internal class RecipeTest {
 
     @Test
     fun `should be made of ingredients`() {
-        val ingredients = listOf("2 eggs", "1 pinch of salt", "1 teaspoon of olive oil")
+        val ingredients = listOf("Egg: 3", "Salt: 2 pinches", "Black pepper: 1 pinch", "Olive oil: 2 teaspoons")
 
         assertEquals(
             ingredients,
             Recipe.create(
                 "French omelette",
-                listOf(Pair("2", "egg"), Pair("1 pinch", "salt"), Pair("1 teaspoon", "olive oil"))
+                listOf(
+                    Pair("egg", "3"),
+                    Pair("salt", "2 pinches"),
+                    Pair("black pepper", "1 pinch"),
+                    Pair("olive oil", "2 teaspoons")
+                )
             ).ingredients()
         )
     }

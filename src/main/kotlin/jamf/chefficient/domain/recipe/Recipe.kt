@@ -25,7 +25,7 @@ class Recipe private constructor(
                 throw MissingAtLeastOneIngredient("Recipes must contain at least one ingredient!")
             }
 
-            val ingredients = rowIngredients.map { Ingredient.fromString(it.first, it.second) }
+            val ingredients = rowIngredients.map { Ingredient.create(it.first, it.second) }
 
             return Recipe(title, ingredients, description, recommendation)
         }
