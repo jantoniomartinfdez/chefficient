@@ -26,7 +26,7 @@ internal class FoodTest {
 
     @Test
     fun `when having 3 kilos of tomatoes in bulk, they should describe what they are`() {
-        val food = Food.fromString("3 Kg", "Tomato")
+        val food = Food.create("3 Kg", "Tomato")
 
         val expected = "3 kgs of tomatoes in bulk"
         assertEquals(expected, food.description())

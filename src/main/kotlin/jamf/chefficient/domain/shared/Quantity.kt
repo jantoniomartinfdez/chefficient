@@ -2,10 +2,10 @@ package jamf.chefficient.domain.shared
 
 import java.math.BigDecimal
 
-class Quantity(private val amount: Float, private val type: Type) {
+class Quantity private constructor(private val amount: Float, private val type: Type) {
     fun description(): String = String.format("%s %s", formatAmount(), formatType()).trim()
 
-    fun isOneItem(): Boolean = amount.toInt() == 1
+    private fun isOneItem(): Boolean = amount.toInt() == 1
 
     private fun formatType(): String {
         if (isOneItem()) {
