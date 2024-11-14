@@ -3,6 +3,7 @@ package jamf.chefficient.domain.recipe
 class Recipe private constructor(
     val title: String,
     private val ingredients: List<Ingredient>,
+    val steps: List<String>,
     val description: String,
     val recommendation: String
 ) {
@@ -37,7 +38,7 @@ class Recipe private constructor(
 
             val ingredients = rowIngredients.map { Ingredient.create(it.first, it.second) }
 
-            return Recipe(title, ingredients, description, recommendation)
+            return Recipe(title, ingredients, steps, description, recommendation)
         }
 
         private fun String.containsAtLeastOneLetter() = any { it.isLetter() }

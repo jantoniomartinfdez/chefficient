@@ -79,6 +79,7 @@ internal class RecipeTest {
 
         assertEquals("Recipes must contain at least one step in order to be made!", exception.message)
     }
+
     @Test
     fun `should not allow to contain invalid steps`() {
         val exception = assertThrows(
@@ -92,6 +93,18 @@ internal class RecipeTest {
         }
 
         assertEquals("The following steps are invalid: '', '5678', '#@'.", exception.message)
+    }
+
+    @Test
+    fun `should only contain steps in alphanumeric format`() {
+        assertEquals(
+            listOf("valid 1234"),
+            Recipe.create(
+                "French omelette",
+                listOf(Pair("egg", "3")),
+                listOf("valid 1234")
+            ).steps
+        )
     }
 
 
