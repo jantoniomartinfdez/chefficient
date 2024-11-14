@@ -30,9 +30,16 @@ class Recipe private constructor(
                 throw MissingAtLeastOneStep("Recipes must contain at least one step in order to be made!")
             }
 
+            val invalidSteps = steps.filter {!it.containsAtLeastOneLetter()}.map { String.format("'%s'", it) }
+            if (invalidSteps.isNotEmpty()) {
+                throw InvalidSteps("The following steps are invalid: ${invalidSteps.joinToString(", ")}.")
+            }
+
             val ingredients = rowIngredients.map { Ingredient.create(it.first, it.second) }
 
             return Recipe(title, ingredients, description, recommendation)
         }
+
+        private fun String.containsAtLeastOneLetter() = any { it.isLetter() }
     }
 }
