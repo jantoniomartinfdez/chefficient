@@ -5,10 +5,14 @@ import java.math.BigDecimal
 class Quantity private constructor(private val amount: Float, private val type: Type) {
     fun description(): String = String.format("%s %s", formatAmount(), formatType()).trim()
 
-    private fun isOneItem(): Boolean = amount.toInt() == 1
+    fun canOperateWith(anotherQuantity: Quantity): Boolean {
+        return type == anotherQuantity.type
+    }
+
+    private fun isLowerOrEqualToOneItem(): Boolean = amount <= 1.0F
 
     private fun formatType(): String {
-        if (isOneItem()) {
+        if (isLowerOrEqualToOneItem()) {
             return type.singularFormat()
         }
 
@@ -24,20 +28,43 @@ class Quantity private constructor(private val amount: Float, private val type: 
             return amount.toInt().toString()
         }
 
-        return amount.toString()
+        if (!ALLOWED_FRACTIONAL_UNITS.containsValue(amount.toString())) {
+            return amount.toString()
+        }
+
+        return ALLOWED_FRACTIONAL_UNITS.filterValues { it == amount.toString() }.keys.first()
     }
 
     companion object {
-        /**
-         * TODO: check invalid amount + type (when not set => UNIT, when set and not found => error)
-         * TODO: check invalid type => when set and not found => error
-         * TODO: check type when not set => UNIT
-         */
+        private val ALLOWED_FRACTIONAL_UNITS = mapOf("1/2" to "0.5", "1/4" to "0.25")
+
         fun create(quantity: String): Quantity {
-            val amount = quantity.split(" ").first().toFloat()
-            val quantityType = quantity.split(" ").last()
+            val quantityPortions = quantity.split(" ").toMutableList()
+            val amount = parseAmount(quantityPortions)
+            val quantityType = parseQuantityType(quantityPortions)
 
             return Quantity(amount, Type.create(quantityType))
+        }
+
+        private fun parseAmount(quantityPortions: MutableList<String>): Float {
+            val amountInStringFormat = quantityPortions.first()
+            val amount = if (ALLOWED_FRACTIONAL_UNITS.containsKey(amountInStringFormat)) {
+                ALLOWED_FRACTIONAL_UNITS[amountInStringFormat]!!.toFloat()
+            } else {
+                amountInStringFormat.toFloatOrNull()
+            }
+
+            if (amount == null) {
+                throw InvalidAmount("The given amount '$amountInStringFormat' is invalid!")
+            }
+
+            return amount
+        }
+
+        private fun parseQuantityType(quantityPortions: MutableList<String>): String {
+            quantityPortions.removeFirst()
+
+            return quantityPortions.joinToString(" ")
         }
     }
 }
