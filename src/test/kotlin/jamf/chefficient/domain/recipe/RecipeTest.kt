@@ -3,6 +3,8 @@ package jamf.chefficient.domain.recipe
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
 
 internal class RecipeTest {
     @Test
@@ -44,6 +46,24 @@ internal class RecipeTest {
         }
 
         assertEquals("Recipes must contain at least one ingredient!", exception.message)
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = ["", " ", "1234", "@#", "egg1234", "1234egg", "12egg34", "@egg", "12black34 pepper", "black pepper1234"])
+    fun `should not allow to contain invalid ingredient names`(invalidIngredientName: String) {
+        val exception = assertThrows(
+            InvalidIngredientName::class.java,
+        ) {
+            Recipe.create(
+                "French omelette",
+                listOf(
+                    Pair(invalidIngredientName, "3")
+                ),
+                listOf("Sample instruction")
+            )
+        }
+
+        assertEquals("Ingredient name '$invalidIngredientName' should only be alphabetic!", exception.message)
     }
 
     @Test
