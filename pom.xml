@@ -8,9 +8,13 @@
 
   <properties>
     <kotlin.version>1.8.21</kotlin.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <src.dir>${project.basedir}/src/main/kotlin</src.dir>
   </properties>
 
   <build>
+    <sourceDirectory>${src.dir}</sourceDirectory>
+
     <plugins>
       <!-- Configure Kotlin compiler -->
       <plugin>
@@ -23,7 +27,7 @@
             <goals> <goal>compile</goal> </goals>
             <configuration>
               <sourceDirs>
-                <sourceDir>${project.basedir}/src/main/kotlin</sourceDir>
+                <sourceDir>${src.dir}</sourceDir>
               </sourceDirs>
             </configuration>
           </execution>
@@ -129,7 +133,7 @@
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
-      <version>RELEASE</version>
+      <version>5.11.3</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
