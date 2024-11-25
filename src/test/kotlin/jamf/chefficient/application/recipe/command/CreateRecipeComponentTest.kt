@@ -3,8 +3,7 @@ package jamf.chefficient.application.recipe.command
 import jamf.chefficient.application.recipe.exception.RecipeAlreadyExists
 import jamf.chefficient.domain.recipe.Recipe
 import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertThrows
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
 class CreateRecipeComponentTest {
@@ -22,6 +21,16 @@ class CreateRecipeComponentTest {
         givenARecipeTitledFrenchOmeletteAlreadyExists()
         val command = whenCreatingARecipeTitledFrenchOmelette()
         thenThrowAnError(command)
+    }
+
+    @Test
+    fun `Given a recipe titled 'French Omelette' does not exist, when creating it, then it should be saved`() {
+        val command = whenCreatingARecipeTitledFrenchOmelette()
+        systemUnderTest.handle(command)
+
+        val recipe = recipeRepository.findByTitle(command.title)
+        assertNotNull(recipe)
+        assertEquals(command.title, recipe!!.title)
     }
 
     private fun givenARecipeTitledFrenchOmeletteAlreadyExists() {

@@ -14,6 +14,10 @@ class InMemoryRecipeRepository : RecipeRepository {
         recipes[recipe.title] = recipe
     }
 
+    fun findByTitle(title: String): Recipe? {
+        return recipes[title]
+    }
+
     fun reset() {
         recipes.clear()
     }
