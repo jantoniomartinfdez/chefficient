@@ -28,6 +28,10 @@ class CreateRecipeComponentTest {
         val command = whenCreatingARecipeTitledFrenchOmelette()
         systemUnderTest.handle(command)
 
+        thenItShouldBeSaved(command)
+    }
+
+    private fun thenItShouldBeSaved(command: CreateRecipeCommand) {
         val recipe = recipeRepository.findByTitle(command.title)
         assertNotNull(recipe)
         assertEquals(command.title, recipe!!.title)
