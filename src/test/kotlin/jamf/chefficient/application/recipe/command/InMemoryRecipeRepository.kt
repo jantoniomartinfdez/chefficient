@@ -6,8 +6,8 @@ import jamf.chefficient.domain.recipe.RecipeRepository
 class InMemoryRecipeRepository : RecipeRepository {
     private val recipes: MutableMap<String, Recipe> = hashMapOf()
 
-    override fun contains(recipe: Recipe): Boolean {
-        return recipes.containsKey(recipe.title)
+    override fun contains(title: String): Boolean {
+        return recipes.containsKey(title)
     }
 
     override fun save(recipe: Recipe) {

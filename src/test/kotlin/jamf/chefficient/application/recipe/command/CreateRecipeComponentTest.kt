@@ -18,7 +18,13 @@ class CreateRecipeComponentTest {
     }
 
     @Test
-    fun `Given a recipe titled "French Omelette" already exists | When creating another one | Then throw an error`() {
+    fun `Given a recipe titled 'French Omelette' already exists, when creating another one, then throw an error`() {
+        givenARecipeTitledFrenchOmeletteAlreadyExists()
+        val command = whenCreatingARecipeTitledFrenchOmelette()
+        thenThrowAnError(command)
+    }
+
+    private fun givenARecipeTitledFrenchOmeletteAlreadyExists() {
         recipeRepository.save(
             Recipe.create(
                 "French omelette",
@@ -33,8 +39,10 @@ class CreateRecipeComponentTest {
                 "Sample recommendation"
             )
         )
+    }
 
-        val command = CreateRecipeCommand(
+    private fun whenCreatingARecipeTitledFrenchOmelette(): CreateRecipeCommand {
+        return CreateRecipeCommand(
             "French omelette",
             listOf(
                 Pair("egg", "3"),
@@ -46,6 +54,9 @@ class CreateRecipeComponentTest {
             "Sample description",
             "Sample recommendation"
         )
+    }
+
+    private fun thenThrowAnError(command: CreateRecipeCommand) {
         val exception = assertThrows(RecipeAlreadyExists::class.java) { systemUnderTest.handle(command) }
 
         assertEquals("The recipe 'French omelette' already exists!", exception.message)

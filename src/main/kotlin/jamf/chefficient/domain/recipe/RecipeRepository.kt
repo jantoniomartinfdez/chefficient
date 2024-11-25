@@ -1,6 +1,6 @@
 package jamf.chefficient.domain.recipe
 
 interface RecipeRepository {
-    fun contains(recipe: Recipe): Boolean
+    fun contains(title: String): Boolean
     fun save(recipe: Recipe)
 }
