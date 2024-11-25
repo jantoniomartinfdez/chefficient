@@ -48,6 +48,6 @@ class CreateRecipeComponentTest {
         )
         val exception = assertThrows(RecipeAlreadyExists::class.java) { systemUnderTest.handle(command) }
 
-        assertEquals("The recipe 'French Omelette' already exists!", exception.message)
+        assertEquals("The recipe 'French omelette' already exists!", exception.message)
     }
 }
