@@ -2,6 +2,7 @@ package jamf.chefficient.infrastructure.persistence.postgresql
 
 import jamf.chefficient.domain.recipe.Recipe
 import jamf.chefficient.infrastructure.persistence.DBConnectionProvider
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.*
 import org.testcontainers.containers.PostgreSQLContainer
 import java.sql.SQLException
@@ -40,7 +41,7 @@ internal class RecipeRepositoryIntegrationTest {
 
         Assertions.assertTrue(recipeRepository!!.contains("French omelette"))
         val actualRecipe = recipeRepository!!.find("French omelette")
-        Assertions.assertEquals(expectedRecipe, actualRecipe)
+        assertThat(actualRecipe).usingRecursiveComparison().isEqualTo(expectedRecipe)
     }
 
     private fun createTableDefinitions(connectionProvider: DBConnectionProvider) {
@@ -49,14 +50,13 @@ internal class RecipeRepositoryIntegrationTest {
                 val preparedStatement = conn.prepareStatement(
                     """
                         CREATE TABLE IF NOT EXISTS recipes (
-                            id BIGINT NOT NULL,
+                            id SERIAL PRIMARY KEY,
                             title VARCHAR(32) NOT NULL,
                             ingredients TEXT NOT NULL,
                             steps TEXT NOT NULL,
                             description TEXT NOT NULL,
                             recommendation TEXT NOT NULL,
 
-                            PRIMARY KEY (id),
                             UNIQUE (title)
                         )
                     """.trimIndent()
