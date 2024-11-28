@@ -6,6 +6,9 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 
+/**
+ * TODO: it cannot contain 2 ingredients with the same name
+ */
 internal class RecipeTest {
     @Test
     fun `should not allow an empty title`() {

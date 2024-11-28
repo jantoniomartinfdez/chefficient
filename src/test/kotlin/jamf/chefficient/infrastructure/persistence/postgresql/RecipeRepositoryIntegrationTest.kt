@@ -25,6 +25,14 @@ internal class RecipeRepositoryIntegrationTest {
 
     @Test
     fun `Given a recipe is stored, when retrieving it again, then it should preserve the same information`() {
+        val expectedRecipe = givenARecipeIsStored()
+
+        val actualRecipe = whenRetrievingItAgain()
+
+        thenItShouldPreserveTheSameInformation(actualRecipe, expectedRecipe)
+    }
+
+    private fun givenARecipeIsStored(): Recipe {
         val expectedRecipe = Recipe.create(
             "French omelette",
             listOf(
@@ -39,8 +47,16 @@ internal class RecipeRepositoryIntegrationTest {
         )
         recipeRepository!!.save(expectedRecipe)
 
+        return expectedRecipe
+    }
+
+    private fun whenRetrievingItAgain() = recipeRepository!!.find("French omelette")
+
+    private fun thenItShouldPreserveTheSameInformation(
+        actualRecipe: Recipe?,
+        expectedRecipe: Recipe
+    ) {
         Assertions.assertTrue(recipeRepository!!.contains("French omelette"))
-        val actualRecipe = recipeRepository!!.find("French omelette")
         assertThat(actualRecipe).usingRecursiveComparison().isEqualTo(expectedRecipe)
     }
 
@@ -51,13 +67,20 @@ internal class RecipeRepositoryIntegrationTest {
                     """
                         CREATE TABLE IF NOT EXISTS recipes (
                             id SERIAL PRIMARY KEY,
-                            title VARCHAR(32) NOT NULL,
-                            ingredients TEXT NOT NULL,
+                            title VARCHAR(50) NOT NULL,
                             steps TEXT NOT NULL,
                             description TEXT NOT NULL,
                             recommendation TEXT NOT NULL,
 
                             UNIQUE (title)
+                        );
+                        
+                        CREATE TABLE IF NOT EXISTS ingredients (
+                            id SERIAL PRIMARY KEY,
+                            recipe_id INTEGER,
+                            name VARCHAR(50) NOT NULL,
+
+                            UNIQUE (recipe_id, name)
                         )
                     """.trimIndent()
                 )
