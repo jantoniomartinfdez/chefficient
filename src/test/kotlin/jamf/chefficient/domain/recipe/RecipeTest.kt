@@ -6,9 +6,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 
-/**
- * TODO: it cannot contain 2 ingredients with the same name
- */
 internal class RecipeTest {
     @Test
     fun `should not allow an empty title`() {
@@ -67,6 +64,27 @@ internal class RecipeTest {
         }
 
         assertEquals("Ingredient name '$invalidIngredientName' should only be alphabetic!", exception.message)
+    }
+
+    @Test
+    fun `should not allow to contain duplicated ingredients`() {
+        val exception = assertThrows(
+            DuplicatedIngredient::class.java,
+        ) {
+            Recipe.create(
+                "French omelette",
+                listOf(
+                    Pair("egg", "3"),
+                    Pair("salt", "2 pinches"),
+                    Pair("salt", "1 pinch"),
+                    Pair("black pepper", "1 pinch"),
+                    Pair("olive oil", "2 teaspoons")
+                ),
+                listOf("Sample instruction")
+            )
+        }
+
+        assertEquals("The ingredient 'salt' is duplicated!", exception.message)
     }
 
     @Test

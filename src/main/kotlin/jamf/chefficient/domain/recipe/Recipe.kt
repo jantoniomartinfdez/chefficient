@@ -36,9 +36,22 @@ class Recipe private constructor(
                 throw InvalidSteps("The following steps are invalid: ${invalidSteps.joinToString(", ")}.")
             }
 
-            val ingredients = rowIngredients.map { Ingredient.create(it.first, it.second) }
+            val ingredientsWithoutDuplications = parseIngredients(rowIngredients)
 
-            return Recipe(title, ingredients, steps, description, recommendation)
+            return Recipe(title, ingredientsWithoutDuplications, steps, description, recommendation)
+        }
+
+        private fun parseIngredients(rowIngredients: List<Pair<String, String>>): List<Ingredient> {
+            val ingredientsWithoutDuplications: MutableMap<String, Ingredient> = mutableMapOf()
+            rowIngredients.forEach {
+                if (ingredientsWithoutDuplications.containsKey(it.first)) {
+                    throw DuplicatedIngredient("The ingredient '${it.first}' is duplicated!")
+                }
+
+                ingredientsWithoutDuplications[it.first] = Ingredient.create(it.first, it.second)
+            }
+
+            return ingredientsWithoutDuplications.values.toList()
         }
 
         private fun String.containsAtLeastOneLetter() = any { it.isLetter() }
