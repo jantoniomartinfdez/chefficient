@@ -6,7 +6,6 @@ import jamf.chefficient.HelloWorld
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 
-
 class RecipeEndToEndTest {
 
     private val app = HelloWorld("someDependency").app
@@ -16,10 +15,10 @@ class RecipeEndToEndTest {
         JavalinTest.test(app) { server, client ->
             val recipeJsonRequest = """
                 {
-                    "title":"French Omelette",
+                    "title": "French Omelette",
                     "ingredients": [
-                        {"egg", "3"},
-                        {"salt", "2 pinches"}
+                        {"first": "egg", "second": "3"},
+                        {"first": "salt", "second": "2 pinches"}
                     ],
                     "steps": [
                         "Step 1",

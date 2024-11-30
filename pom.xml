@@ -8,7 +8,7 @@
 
   <properties>
     <java.version>19</java.version>
-    <kotlin.version>1.8.21</kotlin.version>
+    <kotlin.version>2.1.0</kotlin.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <src.dir>${project.basedir}/src/main/kotlin</src.dir>
   </properties>
@@ -42,6 +42,19 @@
             </configuration>
           </execution>
         </executions>
+        <configuration>
+          <compilerPlugins>
+            <!-- serialization plugin within Kotlin compiler plugin -->
+            <plugin>kotlinx-serialization</plugin>
+          </compilerPlugins>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-maven-serialization</artifactId>
+            <version>${kotlin.version}</version>
+          </dependency>
+        </dependencies>
       </plugin>
       <!-- Configure compiler execution order. -->
       <plugin>
@@ -163,11 +176,23 @@
       <scope>test</scope>
     </dependency>
 
-    <!-- DB library -->
+    <!-- DB libraries -->
     <dependency>
       <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
       <version>42.7.3</version>
+    </dependency>
+    <dependency>
+      <groupId>org.flywaydb</groupId>
+      <artifactId>flyway-core</artifactId>
+      <version>9.16.3</version>
+    </dependency>
+
+    <!-- Kotlin multiplatform serialization runtime library -->
+    <dependency>
+      <groupId>org.jetbrains.kotlinx</groupId>
+      <artifactId>kotlinx-serialization-json-jvm</artifactId>
+      <version>1.7.3</version>
     </dependency>
   </dependencies>
 </project>
