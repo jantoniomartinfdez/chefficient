@@ -8,13 +8,17 @@ import org.flywaydb.core.Flyway
 import jamf.chefficient.infrastructure.persistence.postgresql.RecipeRepository as PostgresqlRecipeRepository
 
 object TestBootstrappingService : BootstrappingService {
-    private const val DB_URL = "jdbc:postgresql://localhost:9999/test"
+    private const val DB_URL = "jdbc:postgresql://localhost:9991/chefficient_test_db"
     private const val DB_USER = "test_user"
-    private const val DB_PASSWORD = "1234"
+    private const val DB_PASSWORD = "5678"
 
     override fun startUp() {
         runDbMigrations()
         setUpDependencyInjection()
+    }
+
+    override fun javalinPort(): Int {
+        return 7071
     }
 
     private fun runDbMigrations() {

@@ -1,9 +1,18 @@
 services:
-  database:
+  database-dev:
     image: 'postgres:latest'
     ports:
-      - "9999:5432"
+      - "9990:5432"
+    environment:
+      POSTGRES_USER: dev_user
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: chefficient_dev_db
+
+  database-test:
+    image: 'postgres:latest'
+    ports:
+      - "9991:5432"
     environment:
       POSTGRES_USER: test_user
-      POSTGRES_PASSWORD: 1234
-      POSTGRES_DB: test
+      POSTGRES_PASSWORD: 5678
+      POSTGRES_DB: chefficient_test_db
