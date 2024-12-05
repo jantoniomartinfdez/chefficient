@@ -16,4 +16,10 @@ class DBConnectionProvider(
                 throw RuntimeException(exception)
             }
         }
+
+    companion object {
+        fun fromConfiguration() {
+
+        }
+    }
 }
