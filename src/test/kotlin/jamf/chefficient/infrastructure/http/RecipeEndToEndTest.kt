@@ -9,9 +9,8 @@ import jamf.chefficient.infrastructure.configuration.TestBootstrappingService
 import jamf.chefficient.infrastructure.persistence.postgresql.DatabaseService
 import okhttp3.Response
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
-// TODO: Add this test under maven lifecycle
 class RecipeEndToEndTest {
     private val app = Chefficient(TestBootstrappingService).app
 
