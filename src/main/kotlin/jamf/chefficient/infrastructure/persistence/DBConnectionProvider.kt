@@ -1,5 +1,6 @@
 package jamf.chefficient.infrastructure.persistence
 
+import java.io.FileNotFoundException
 import java.sql.Connection
 import java.sql.DriverManager
 
@@ -19,7 +20,10 @@ class DBConnectionProvider(
 
     companion object {
         fun fromConfiguration() {
-
+            val inputStream = this::class.java.classLoader.getResourceAsStream("application.properties")
+            if (inputStream == null) {
+                throw FileNotFoundException("The file application.properties does not exist within test scope")
+            }
         }
     }
 }
