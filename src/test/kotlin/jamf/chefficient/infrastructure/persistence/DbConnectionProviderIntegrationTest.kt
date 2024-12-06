@@ -20,6 +20,8 @@ class DbConnectionProviderIntegrationTest {
 
     @Test
     fun `Given no DB configuration file exists, when creating the connection from it, then it should fail`() {
+        givenNoDbConfigurationFileExists()
+
         val exception = assertThrows(FileNotFoundException::class.java) { systemUnderTest!!.fromConfiguration() }
 
         assertEquals("The file application.properties does not exist!", exception.message)
@@ -48,9 +50,19 @@ class DbConnectionProviderIntegrationTest {
 
     @AfterEach
     fun tearDown() {
+        givenNoDbConfigurationFileExists()
+    }
+
+    private fun givenNoDbConfigurationFileExists() {
         val workingDirectoryTheAppIsRunningFrom = System.getProperty("user.dir")
-        val testResourcesDirectory = File(workingDirectoryTheAppIsRunningFrom, "target/test-classes")
-        val file = File(testResourcesDirectory, "application.properties")
+        var testResourcesDirectory = File(workingDirectoryTheAppIsRunningFrom, "target/test-classes")
+        var file = File(testResourcesDirectory, "application.properties")
+        file.delete()
+
+        // JAVA class loader fetches resources from "main" and then overrides with the ones in "test" folder when running tests.
+        // Thus, both need to be removed
+        testResourcesDirectory = File(workingDirectoryTheAppIsRunningFrom, "target/classes")
+        file = File(testResourcesDirectory, "application.properties")
         file.delete()
     }
 
