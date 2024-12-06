@@ -1,12 +1,12 @@
 package jamf.chefficient.infrastructure.persistence
 
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertThrows
-import org.junit.jupiter.api.Disabled
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import java.io.File
 import java.io.FileNotFoundException
+import java.io.FileWriter
 
 
 class DbConnectionProviderIntegrationTest {
@@ -27,8 +27,28 @@ class DbConnectionProviderIntegrationTest {
     }
 
     @Test
-    @Disabled("TODO")
     fun `Given a DB configuration file exists, and contains DB credentials, when creating the connection from it, it should be correctly set up`() {
+        val file = givenADbConfigurationFileExists()
+        FileWriter(file).use { writer ->
+            writer.write(
+                """
+                    db.url=jdbc:jdbc:postgresql://localhost:9991/chefficient_test_db
+                    db.username=test_user
+                    db.password=5678
+                """.trimIndent()
+            )
+        }
+
+        val dbConnectionProvider = DbConnectionProvider.fromConfiguration()
+
+        assertInstanceOf(DbConnectionProvider::class.java, dbConnectionProvider)
+        assertThat(dbConnectionProvider).usingRecursiveComparison().isEqualTo(
+            DbConnectionProvider(
+                "jdbc:postgresql://localhost:9991/chefficient_test_db",
+                "test_user",
+                "5678"
+            )
+        )
     }
 
     @AfterEach
@@ -40,10 +60,12 @@ class DbConnectionProviderIntegrationTest {
     }
 
 
-    private fun givenADbConfigurationFileExists() {
+    private fun givenADbConfigurationFileExists(): File {
         val workingDirectoryTheAppIsRunningFrom = System.getProperty("user.dir")
         val testResourcesDirectory = File(workingDirectoryTheAppIsRunningFrom, "target/test-classes")
         val file = File(testResourcesDirectory, "application.properties")
         file.createNewFile()
+
+        return file
     }
 }
