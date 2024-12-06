@@ -2,7 +2,7 @@ package jamf.chefficient.infrastructure.configuration
 
 import jamf.chefficient.application.recipe.command.CreateRecipeCommandHandler
 import jamf.chefficient.domain.recipe.RecipeRepository
-import jamf.chefficient.infrastructure.persistence.DBConnectionProvider
+import jamf.chefficient.infrastructure.persistence.DbConnectionProvider
 import jamf.chefficient.infrastructure.persistence.postgresql.DatabaseService
 import org.flywaydb.core.Flyway
 import jamf.chefficient.infrastructure.persistence.postgresql.RecipeRepository as PostgresqlRecipeRepository
@@ -31,8 +31,8 @@ object TestBootstrappingService : BootstrappingService {
     }
 
     private fun setUpDependencyInjection() {
-        val dbConnectionProvider = DBConnectionProvider(DB_URL, DB_USER, DB_PASSWORD)
-        ServiceLocator.registerService(DBConnectionProvider::class.qualifiedName!!, dbConnectionProvider)
+        val dbConnectionProvider = DbConnectionProvider(DB_URL, DB_USER, DB_PASSWORD)
+        ServiceLocator.registerService(DbConnectionProvider::class.qualifiedName!!, dbConnectionProvider)
 
         val recipeRepository = PostgresqlRecipeRepository(dbConnectionProvider)
         ServiceLocator.registerService(RecipeRepository::class.qualifiedName!!, recipeRepository)

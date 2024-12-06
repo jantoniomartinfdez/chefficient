@@ -5,7 +5,7 @@ import java.sql.Connection
 import java.sql.DriverManager
 import java.util.*
 
-class DBConnectionProvider(
+class DbConnectionProvider(
     private val url: String,
     private val username: String,
     private val password: String

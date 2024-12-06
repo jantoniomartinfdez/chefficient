@@ -2,11 +2,11 @@ package jamf.chefficient.infrastructure.persistence.postgresql
 
 import jamf.chefficient.domain.recipe.Recipe
 import jamf.chefficient.domain.recipe.RecipeRepository
-import jamf.chefficient.infrastructure.persistence.DBConnectionProvider
+import jamf.chefficient.infrastructure.persistence.DbConnectionProvider
 import java.sql.Connection
 import java.sql.SQLException
 
-class RecipeRepository(private val connectionProvider: DBConnectionProvider) : RecipeRepository {
+class RecipeRepository(private val connectionProvider: DbConnectionProvider) : RecipeRepository {
     override fun contains(title: String) = find(title) != null
 
     override fun save(recipe: Recipe) {

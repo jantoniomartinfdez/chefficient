@@ -1,7 +1,7 @@
 package jamf.chefficient.infrastructure.persistence.postgresql
 
 import jamf.chefficient.domain.recipe.Recipe
-import jamf.chefficient.infrastructure.persistence.DBConnectionProvider
+import jamf.chefficient.infrastructure.persistence.DbConnectionProvider
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.*
 import org.testcontainers.containers.PostgreSQLContainer
@@ -12,7 +12,7 @@ internal class RecipeRepositoryIntegrationTest {
 
     @BeforeEach
     fun setUp() {
-        val connectionProvider = DBConnectionProvider(
+        val connectionProvider = DbConnectionProvider(
             postgres.jdbcUrl,
             postgres.username,
             postgres.password
@@ -60,7 +60,7 @@ internal class RecipeRepositoryIntegrationTest {
         assertThat(actualRecipe).usingRecursiveComparison().isEqualTo(expectedRecipe)
     }
 
-    private fun createTableDefinitions(connectionProvider: DBConnectionProvider) {
+    private fun createTableDefinitions(connectionProvider: DbConnectionProvider) {
         try {
             connectionProvider.connection.use { conn ->
                 val preparedStatement = conn.prepareStatement(
