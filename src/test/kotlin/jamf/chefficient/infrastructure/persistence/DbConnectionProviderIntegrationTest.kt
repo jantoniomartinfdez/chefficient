@@ -27,28 +27,13 @@ class DbConnectionProviderIntegrationTest {
     }
 
     @Test
-    fun `Given a DB configuration file exists, and contains DB credentials, when creating the connection from it, it should be correctly set up`() {
+    fun `Given a DB configuration file exists, and contains DB credentials, when creating the connection from it, then it should be correctly set up`() {
         val file = givenADbConfigurationFileExists()
-        FileWriter(file).use { writer ->
-            writer.write(
-                """ 
-                    db.url=jdbc:postgresql://localhost:9991/chefficient_test_db
-                    db.username=test_user
-                    db.password=5678
-                """.trimIndent()
-            )
-        }
+        givenContainsDbCredentials(file)
 
         val dbConnectionProvider = DbConnectionProvider.fromConfiguration()
 
-        assertInstanceOf(DbConnectionProvider::class.java, dbConnectionProvider)
-        assertThat(dbConnectionProvider).usingRecursiveComparison().isEqualTo(
-            DbConnectionProvider(
-                "jdbc:postgresql://localhost:9991/chefficient_test_db",
-                "test_user",
-                "5678"
-            )
-        )
+        thenItShouldBeCorrectlySetUp(dbConnectionProvider)
     }
 
     @AfterEach
@@ -59,7 +44,6 @@ class DbConnectionProviderIntegrationTest {
         file.delete()
     }
 
-
     private fun givenADbConfigurationFileExists(): File {
         val workingDirectoryTheAppIsRunningFrom = System.getProperty("user.dir")
         val testResourcesDirectory = File(workingDirectoryTheAppIsRunningFrom, "target/test-classes")
@@ -67,5 +51,28 @@ class DbConnectionProviderIntegrationTest {
         file.createNewFile()
 
         return file
+    }
+
+    private fun givenContainsDbCredentials(file: File) {
+        FileWriter(file).use { writer ->
+            writer.write(
+                """ 
+                        db.url=jdbc:postgresql://localhost:9991/chefficient_test_db
+                        db.username=test_user
+                        db.password=5678
+                    """.trimIndent()
+            )
+        }
+    }
+
+    private fun thenItShouldBeCorrectlySetUp(dbConnectionProvider: DbConnectionProvider) {
+        assertInstanceOf(DbConnectionProvider::class.java, dbConnectionProvider)
+        assertThat(dbConnectionProvider).usingRecursiveComparison().isEqualTo(
+            DbConnectionProvider(
+                "jdbc:postgresql://localhost:9991/chefficient_test_db",
+                "test_user",
+                "5678"
+            )
+        )
     }
 }
