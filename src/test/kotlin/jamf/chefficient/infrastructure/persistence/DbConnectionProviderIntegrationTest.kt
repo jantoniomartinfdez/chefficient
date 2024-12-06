@@ -3,6 +3,7 @@ package jamf.chefficient.infrastructure.persistence
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.io.File
 import java.io.FileNotFoundException
@@ -10,9 +11,16 @@ import java.io.FileWriter
 
 
 class DbConnectionProviderIntegrationTest {
+    private var systemUnderTest: DbConnectionProviderFactorySpy? = null
+
+    @BeforeEach
+    fun setUp() {
+        systemUnderTest = DbConnectionProviderFactorySpy()
+    }
+
     @Test
     fun `Given no DB configuration file exists, when creating the connection from it, then it should fail`() {
-        val exception = assertThrows(FileNotFoundException::class.java) { DbConnectionProvider.fromConfiguration() }
+        val exception = assertThrows(FileNotFoundException::class.java) { systemUnderTest!!.fromConfiguration() }
 
         assertEquals("The file application.properties does not exist!", exception.message)
     }
@@ -21,7 +29,7 @@ class DbConnectionProviderIntegrationTest {
     fun `Given a DB configuration file exists, and doesn't contain DB credentials, when creating the connection from it, then it should fail`() {
         givenADbConfigurationFileExists()
 
-        val exception = assertThrows(DbCredentialsNotFound::class.java) { DbConnectionProvider.fromConfiguration() }
+        val exception = assertThrows(DbCredentialsNotFound::class.java) { systemUnderTest!!.fromConfiguration() }
 
         assertEquals("DB credentials within the file application.properties don't exist!", exception.message)
     }
@@ -31,7 +39,7 @@ class DbConnectionProviderIntegrationTest {
         val file = givenADbConfigurationFileExists()
         givenContainsDbCredentials(file)
 
-        val dbConnectionProvider = DbConnectionProvider.fromConfiguration()
+        val dbConnectionProvider = systemUnderTest!!.fromConfiguration()
 
         thenItShouldBeCorrectlySetUp(dbConnectionProvider)
     }
@@ -42,6 +50,11 @@ class DbConnectionProviderIntegrationTest {
         val testResourcesDirectory = File(workingDirectoryTheAppIsRunningFrom, "target/test-classes")
         val file = File(testResourcesDirectory, "application.properties")
         file.delete()
+    }
+
+    @AfterEach
+    fun `should release system resources after using the DB configuration file`() {
+        assertTrue(systemUnderTest!!.isFileClosed(), "System resources have not been released!")
     }
 
     private fun givenADbConfigurationFileExists(): File {
