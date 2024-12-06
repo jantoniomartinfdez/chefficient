@@ -31,8 +31,8 @@ class DbConnectionProviderIntegrationTest {
         val file = givenADbConfigurationFileExists()
         FileWriter(file).use { writer ->
             writer.write(
-                """
-                    db.url=jdbc:jdbc:postgresql://localhost:9991/chefficient_test_db
+                """ 
+                    db.url=jdbc:postgresql://localhost:9991/chefficient_test_db
                     db.username=test_user
                     db.password=5678
                 """.trimIndent()

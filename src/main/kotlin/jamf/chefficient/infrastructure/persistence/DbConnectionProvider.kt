@@ -20,7 +20,7 @@ class DbConnectionProvider(
         }
 
     companion object {
-        fun fromConfiguration() {
+        fun fromConfiguration(): DbConnectionProvider {
             val inputStream = this::class.java.classLoader.getResourceAsStream("application.properties")
                 ?: throw FileNotFoundException("The file application.properties does not exist!")
 
@@ -33,6 +33,8 @@ class DbConnectionProvider(
             if (dbUrl == null || dbUser == null || dbPassword == null) {
                 throw DbCredentialsNotFound("DB credentials within the file application.properties don't exist!")
             }
+
+            return DbConnectionProvider(dbUrl, dbUser, dbPassword)
         }
     }
 }
