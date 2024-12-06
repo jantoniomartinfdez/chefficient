@@ -6,12 +6,12 @@ import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import java.io.FileNotFoundException
 
-class DBConnectionProviderTest {
+class DBConnectionProviderIntegrationTest {
     @Test
     fun `Given no DB configuration file exists, when creating the connection from it, then it should fail`() {
         val exception = assertThrows(FileNotFoundException::class.java) { DBConnectionProvider.fromConfiguration() }
 
-        assertEquals("The file application.properties does not exist within test scope", exception.message)
+        assertEquals("The file application.properties does not exist!", exception.message)
     }
 
     @Test
