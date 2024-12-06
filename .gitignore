@@ -2,3 +2,4 @@ target/
 .settings/
 .idea
 chefficient.iml
+src/main/resources/application.properties
