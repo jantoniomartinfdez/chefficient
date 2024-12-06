@@ -3,14 +3,13 @@ package jamf.chefficient.infrastructure.configuration
 import jamf.chefficient.application.recipe.command.CreateRecipeCommandHandler
 import jamf.chefficient.domain.recipe.RecipeRepository
 import jamf.chefficient.infrastructure.persistence.DbConnectionProvider
+import jamf.chefficient.infrastructure.persistence.DbConnectionProviderFactory
 import jamf.chefficient.infrastructure.persistence.postgresql.DatabaseService
 import org.flywaydb.core.Flyway
 import jamf.chefficient.infrastructure.persistence.postgresql.RecipeRepository as PostgresqlRecipeRepository
 
 object TestBootstrappingService : BootstrappingService {
-    private const val DB_URL = "jdbc:postgresql://localhost:9991/chefficient_test_db"
-    private const val DB_USER = "test_user"
-    private const val DB_PASSWORD = "5678"
+    private val dbConnectionProvider = DbConnectionProviderFactory().fromConfiguration()
 
     override fun startUp() {
         runDbMigrations()
@@ -24,14 +23,13 @@ object TestBootstrappingService : BootstrappingService {
     private fun runDbMigrations() {
         // Run Flyway to migrate the database schema
         val flyway = Flyway.configure()
-            .dataSource(DB_URL, DB_USER, DB_PASSWORD)
+            .dataSource(dbConnectionProvider.url, dbConnectionProvider.username, dbConnectionProvider.password)
             .locations("filesystem:src/main/resources/flyway/migrations")
             .load()
         flyway.migrate()
     }
 
     private fun setUpDependencyInjection() {
-        val dbConnectionProvider = DbConnectionProvider(DB_URL, DB_USER, DB_PASSWORD)
         ServiceLocator.registerService(DbConnectionProvider::class.qualifiedName!!, dbConnectionProvider)
 
         val recipeRepository = PostgresqlRecipeRepository(dbConnectionProvider)

@@ -3,11 +3,7 @@ package jamf.chefficient.infrastructure.persistence
 import java.sql.Connection
 import java.sql.DriverManager
 
-open class DbConnectionProvider(
-    private val url: String,
-    private val username: String,
-    private val password: String
-) {
+open class DbConnectionProvider(val url: String, val username: String, val password: String) {
     val connection: Connection
         get() {
             try {
