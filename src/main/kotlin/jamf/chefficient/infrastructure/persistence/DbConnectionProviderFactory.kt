@@ -9,22 +9,26 @@ open class DbConnectionProviderFactory {
         val inputStream = this::class.java.classLoader.getResourceAsStream("application.properties")
             ?: throw FileNotFoundException("The file application.properties does not exist!")
 
-        val properties = Properties()
-        properties.load(inputStream)
-        val dbUrl = properties.getProperty("db.url")
-        val dbUser = properties.getProperty("db.username")
-        val dbPassword = properties.getProperty("db.password")
+        try {
+            val properties = Properties()
+            properties.load(inputStream)
+            val dbUrl = properties.getProperty("db.url")
+            val dbUser = properties.getProperty("db.username")
+            val dbPassword = properties.getProperty("db.password")
 
-        if (dbUrl == null || dbUser == null || dbPassword == null) {
-            throw DbCredentialsNotFound("DB credentials within the file application.properties don't exist!")
+            if (dbUrl == null || dbUser == null || dbPassword == null) {
+                throw DbCredentialsNotFound("DB credentials within the file application.properties don't exist!")
+            }
+
+            return DbConnectionProvider(dbUrl, dbUser, dbPassword)
+        } catch (exception: Throwable) {
+            throw exception
+        } finally {
+            releaseSystemResources(inputStream)
         }
-
-//        releaseSystemResources(inputStream)
-
-        return DbConnectionProvider(dbUrl, dbUser, dbPassword)
     }
 
     protected open fun releaseSystemResources(inputStream: InputStream) {
-
+        inputStream.close()
     }
 }

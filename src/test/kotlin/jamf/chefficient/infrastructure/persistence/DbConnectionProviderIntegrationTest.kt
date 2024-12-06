@@ -32,6 +32,7 @@ class DbConnectionProviderIntegrationTest {
         val exception = assertThrows(DbCredentialsNotFound::class.java) { systemUnderTest!!.fromConfiguration() }
 
         assertEquals("DB credentials within the file application.properties don't exist!", exception.message)
+        thenItShouldReleaseSystemResourcesAfterUsingTheDbConfigurationFile()
     }
 
     @Test
@@ -42,6 +43,7 @@ class DbConnectionProviderIntegrationTest {
         val dbConnectionProvider = systemUnderTest!!.fromConfiguration()
 
         thenItShouldBeCorrectlySetUp(dbConnectionProvider)
+        thenItShouldReleaseSystemResourcesAfterUsingTheDbConfigurationFile()
     }
 
     @AfterEach
@@ -50,11 +52,6 @@ class DbConnectionProviderIntegrationTest {
         val testResourcesDirectory = File(workingDirectoryTheAppIsRunningFrom, "target/test-classes")
         val file = File(testResourcesDirectory, "application.properties")
         file.delete()
-    }
-
-    @AfterEach
-    fun `should release system resources after using the DB configuration file`() {
-        assertTrue(systemUnderTest!!.isFileClosed(), "System resources have not been released!")
     }
 
     private fun givenADbConfigurationFileExists(): File {
@@ -87,5 +84,9 @@ class DbConnectionProviderIntegrationTest {
                 "5678"
             )
         )
+    }
+
+    private fun thenItShouldReleaseSystemResourcesAfterUsingTheDbConfigurationFile() {
+        assertTrue(systemUnderTest!!.isFileClosed(), "System resources have not been released!")
     }
 }
