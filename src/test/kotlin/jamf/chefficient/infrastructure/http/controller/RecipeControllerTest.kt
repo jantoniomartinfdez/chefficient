@@ -31,7 +31,15 @@ class RecipeControllerTest {
 
     @Test
     fun `Given I have an invalid recipe request, when I try to create it, then it should respond Bad-Request`() {
-        every { contextStub.body() } returns """
+        every { contextStub.body() } returns buildInvalidRecipeRequest()
+        every { createRecipeCommandHandlerStub.handle(any()) } throws MissingTitle("Exception message stub")
+
+        systemUnderTest.create.handle(contextStub)
+
+        verify { contextStub.status(eq(HttpStatus.BAD_REQUEST.code)) }
+    }
+
+    private fun buildInvalidRecipeRequest() = """
             {
                 "title": "",
                 "ingredients": [],
@@ -40,10 +48,4 @@ class RecipeControllerTest {
                 "recommendation": ""
             }
         """.trimIndent()
-        every { createRecipeCommandHandlerStub.handle(any()) } throws MissingTitle("Exception message stub")
-
-        systemUnderTest.create.handle(contextStub)
-
-        verify { contextStub.status(eq(HttpStatus.BAD_REQUEST.code)) }
-    }
 }
