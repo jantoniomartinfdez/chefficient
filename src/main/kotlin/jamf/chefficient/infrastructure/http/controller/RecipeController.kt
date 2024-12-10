@@ -1,6 +1,7 @@
 package jamf.chefficient.infrastructure.http.controller
 
 import io.javalin.http.Handler
+import io.javalin.http.HttpStatus
 import jamf.chefficient.application.recipe.command.CreateRecipeCommand
 import jamf.chefficient.application.recipe.command.CreateRecipeCommandHandler
 import jamf.chefficient.infrastructure.persistence.http.request.RecipeRequest
@@ -12,7 +13,7 @@ class RecipeController(private val createRecipeCommandHandler: CreateRecipeComma
         try {
             recipeRequest = Json.decodeFromString<RecipeRequest>(ctx.body())
         } catch (exception: Throwable) {
-            ctx.status(400)
+            ctx.status(HttpStatus.BAD_REQUEST.code)
 
             return@Handler
         }
@@ -26,6 +27,6 @@ class RecipeController(private val createRecipeCommandHandler: CreateRecipeComma
             )
         )
 
-        ctx.status(201)
+        ctx.status(HttpStatus.CREATED.code)
     }
 }
