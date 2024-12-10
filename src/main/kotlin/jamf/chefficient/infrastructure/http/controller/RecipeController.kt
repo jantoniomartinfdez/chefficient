@@ -8,7 +8,14 @@ import kotlinx.serialization.json.Json
 
 class RecipeController(private val createRecipeCommandHandler: CreateRecipeCommandHandler) {
     val create: Handler = Handler { ctx ->
-        val recipeRequest: RecipeRequest = Json.decodeFromString<RecipeRequest>(ctx.body())
+        var recipeRequest: RecipeRequest? = null
+        try {
+            recipeRequest = Json.decodeFromString<RecipeRequest>(ctx.body())
+        } catch (exception: Throwable) {
+            ctx.status(400)
+
+            return@Handler
+        }
         createRecipeCommandHandler.handle(
             CreateRecipeCommand(
                 recipeRequest.title,
