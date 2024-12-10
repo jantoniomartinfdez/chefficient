@@ -2,6 +2,7 @@ package jamf.chefficient.infrastructure.configuration
 
 import jamf.chefficient.application.recipe.command.CreateRecipeCommandHandler
 import jamf.chefficient.domain.recipe.RecipeRepository
+import jamf.chefficient.infrastructure.http.controller.RecipeController
 import jamf.chefficient.infrastructure.persistence.DbConnectionProvider
 import jamf.chefficient.infrastructure.persistence.DbConnectionProviderFactory
 import jamf.chefficient.infrastructure.persistence.postgresql.DatabaseService
@@ -43,5 +44,8 @@ object TestBootstrappingService : BootstrappingService {
 
         val databaseService = DatabaseService(dbConnectionProvider)
         ServiceLocator.registerService(DatabaseService::class.qualifiedName!!, databaseService)
+
+        val recipeController = RecipeController(createRecipeCommandHandler)
+        ServiceLocator.registerService(RecipeController::class.qualifiedName!!, recipeController)
     }
 }
