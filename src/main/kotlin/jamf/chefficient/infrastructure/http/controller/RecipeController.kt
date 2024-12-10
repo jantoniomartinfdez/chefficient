@@ -17,15 +17,19 @@ class RecipeController(private val createRecipeCommandHandler: CreateRecipeComma
 
             return@Handler
         }
-        createRecipeCommandHandler.handle(
-            CreateRecipeCommand(
-                recipeRequest.title,
-                recipeRequest.ingredients,
-                recipeRequest.steps,
-                recipeRequest.description,
-                recipeRequest.recommendation
+        try {
+            createRecipeCommandHandler.handle(
+                CreateRecipeCommand(
+                    recipeRequest.title,
+                    recipeRequest.ingredients,
+                    recipeRequest.steps,
+                    recipeRequest.description,
+                    recipeRequest.recommendation
+                )
             )
-        )
+        } catch (throwable: Throwable) {
+            ctx.status(HttpStatus.BAD_REQUEST.code)
+        }
 
         ctx.status(HttpStatus.CREATED.code)
     }
