@@ -30,6 +30,7 @@ class DbConnectionProviderIntegrationTest {
     @Test
     fun `Given a DB configuration file exists, and doesn't contain DB credentials, when creating the connection from it, then it should fail`() {
         givenADbConfigurationFileExists()
+        givenDoesNotContainDbCredentials()
 
         val exception = assertThrows(DbCredentialsNotFound::class.java) { systemUnderTest!!.fromConfiguration() }
 
@@ -39,9 +40,6 @@ class DbConnectionProviderIntegrationTest {
 
     @Test
     fun `Given a DB configuration file exists, and contains DB credentials, when creating the connection from it, then it should be correctly set up`() {
-        val file = givenADbConfigurationFileExists()
-        givenContainsDbCredentials(file)
-
         val dbConnectionProvider = systemUnderTest!!.fromConfiguration()
 
         thenItShouldBeCorrectlySetUp(dbConnectionProvider)
@@ -50,7 +48,8 @@ class DbConnectionProviderIntegrationTest {
 
     @AfterEach
     fun tearDown() {
-        givenNoDbConfigurationFileExists()
+        givenADbConfigurationFileExists()
+        givenContainsDbCredentials()
     }
 
     private fun givenNoDbConfigurationFileExists() {
@@ -66,16 +65,33 @@ class DbConnectionProviderIntegrationTest {
         file.delete()
     }
 
-    private fun givenADbConfigurationFileExists(): File {
+    private fun givenADbConfigurationFileExists() {
         val workingDirectoryTheAppIsRunningFrom = System.getProperty("user.dir")
-        val testResourcesDirectory = File(workingDirectoryTheAppIsRunningFrom, "target/test-classes")
-        val file = File(testResourcesDirectory, "application.properties")
+        var testResourcesDirectory = File(workingDirectoryTheAppIsRunningFrom, "target/classes")
+        var file = File(testResourcesDirectory, "application.properties")
         file.createNewFile()
 
-        return file
+        testResourcesDirectory = File(workingDirectoryTheAppIsRunningFrom, "target/test-classes")
+        file = File(testResourcesDirectory, "application.properties")
+        file.createNewFile()
     }
 
-    private fun givenContainsDbCredentials(file: File) {
+    private fun givenContainsDbCredentials() {
+        val workingDirectoryTheAppIsRunningFrom = System.getProperty("user.dir")
+        var testResourcesDirectory = File(workingDirectoryTheAppIsRunningFrom, "target/classes")
+        var file = File(testResourcesDirectory, "application.properties")
+        FileWriter(file).use { writer ->
+            writer.write(
+                """ 
+                        db.url=jdbc:postgresql://localhost:9990/chefficient_dev_db
+                        db.username=dev_user
+                        db.password=1234
+                    """.trimIndent()
+            )
+        }
+
+        testResourcesDirectory = File(workingDirectoryTheAppIsRunningFrom, "target/test-classes")
+        file = File(testResourcesDirectory, "application.properties")
         FileWriter(file).use { writer ->
             writer.write(
                 """ 
@@ -84,6 +100,21 @@ class DbConnectionProviderIntegrationTest {
                         db.password=5678
                     """.trimIndent()
             )
+        }
+    }
+
+    private fun givenDoesNotContainDbCredentials() {
+        val workingDirectoryTheAppIsRunningFrom = System.getProperty("user.dir")
+        var testResourcesDirectory = File(workingDirectoryTheAppIsRunningFrom, "target/classes")
+        var file = File(testResourcesDirectory, "application.properties")
+        FileWriter(file).use { writer ->
+            writer.write("")
+        }
+
+        testResourcesDirectory = File(workingDirectoryTheAppIsRunningFrom, "target/test-classes")
+        file = File(testResourcesDirectory, "application.properties")
+        FileWriter(file).use { writer ->
+            writer.write("")
         }
     }
 
