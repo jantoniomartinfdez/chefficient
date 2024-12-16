@@ -22,6 +22,8 @@ class RecipeController(private val createRecipeCommandHandler: CreateRecipeComma
             )
         } catch (throwable: Throwable) {
             ctx.status(HttpStatus.BAD_REQUEST.code)
+
+            return@Handler
         }
 
         ctx.status(HttpStatus.CREATED.code)
