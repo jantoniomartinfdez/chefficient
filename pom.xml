@@ -101,7 +101,7 @@
             <configuration>
               <transformers>
                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                  <mainClass>jamf.HelloWorldKt</mainClass>
+                  <mainClass>jamf.chefficient.ChefficientKt</mainClass>
                 </transformer>
               </transformers>
               <createDependencyReducedPom>false</createDependencyReducedPom>
