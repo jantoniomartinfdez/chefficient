@@ -26,7 +26,8 @@ class RecipeControllerTest {
     fun `Given I have a malformed or empty recipe request, when I try to create it, then it should respond Bad-Request`() {
         systemUnderTest.create.handle(contextStub)
 
-        verify { contextStub.status(eq(HttpStatus.BAD_REQUEST.code)) }
+        verify(exactly = 1) { contextStub.status(any<Int>()) }
+        verify { contextStub.status(HttpStatus.BAD_REQUEST.code) }
     }
 
     @Test
@@ -36,7 +37,8 @@ class RecipeControllerTest {
 
         systemUnderTest.create.handle(contextStub)
 
-        verify { contextStub.status(eq(HttpStatus.BAD_REQUEST.code)) }
+        verify(exactly = 1) { contextStub.status(any<Int>()) }
+        verify { contextStub.status(HttpStatus.BAD_REQUEST.code) }
     }
 
     private fun buildInvalidRecipeRequest() = """
