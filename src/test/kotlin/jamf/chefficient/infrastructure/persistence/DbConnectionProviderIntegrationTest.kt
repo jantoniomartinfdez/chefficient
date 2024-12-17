@@ -12,6 +12,7 @@ import java.io.FileWriter
 
 class DbConnectionProviderIntegrationTest {
     private var systemUnderTest: DbConnectionProviderFactorySpy? = null
+    private val workingDirectoryTheAppIsRunningFrom = System.getProperty("user.dir")
 
     @BeforeEach
     fun setUp() {
@@ -53,34 +54,20 @@ class DbConnectionProviderIntegrationTest {
     }
 
     private fun givenNoDbConfigurationFileExists() {
-        val workingDirectoryTheAppIsRunningFrom = System.getProperty("user.dir")
-        var testResourcesDirectory = File(workingDirectoryTheAppIsRunningFrom, "target/test-classes")
-        var file = File(testResourcesDirectory, "application.properties")
-        file.delete()
+        getTestConfigFile().delete()
 
         // JAVA class loader fetches resources from "main" and then overrides with the ones in "test" folder when running tests.
         // Thus, both need to be removed
-        testResourcesDirectory = File(workingDirectoryTheAppIsRunningFrom, "target/classes")
-        file = File(testResourcesDirectory, "application.properties")
-        file.delete()
+        getMainConfigFile().delete()
     }
 
     private fun givenADbConfigurationFileExists() {
-        val workingDirectoryTheAppIsRunningFrom = System.getProperty("user.dir")
-        var testResourcesDirectory = File(workingDirectoryTheAppIsRunningFrom, "target/classes")
-        var file = File(testResourcesDirectory, "application.properties")
-        file.createNewFile()
-
-        testResourcesDirectory = File(workingDirectoryTheAppIsRunningFrom, "target/test-classes")
-        file = File(testResourcesDirectory, "application.properties")
-        file.createNewFile()
+        getTestConfigFile().createNewFile()
+        getMainConfigFile().createNewFile()
     }
 
     private fun givenContainsDbCredentials() {
-        val workingDirectoryTheAppIsRunningFrom = System.getProperty("user.dir")
-        var testResourcesDirectory = File(workingDirectoryTheAppIsRunningFrom, "target/classes")
-        var file = File(testResourcesDirectory, "application.properties")
-        FileWriter(file).use { writer ->
+        FileWriter(getMainConfigFile()).use { writer ->
             writer.write(
                 """ 
                         db.url=jdbc:postgresql://localhost:9990/chefficient_dev_db
@@ -90,9 +77,7 @@ class DbConnectionProviderIntegrationTest {
             )
         }
 
-        testResourcesDirectory = File(workingDirectoryTheAppIsRunningFrom, "target/test-classes")
-        file = File(testResourcesDirectory, "application.properties")
-        FileWriter(file).use { writer ->
+        FileWriter(getTestConfigFile()).use { writer ->
             writer.write(
                 """ 
                         db.url=jdbc:postgresql://localhost:9991/chefficient_test_db
@@ -104,16 +89,11 @@ class DbConnectionProviderIntegrationTest {
     }
 
     private fun givenDoesNotContainDbCredentials() {
-        val workingDirectoryTheAppIsRunningFrom = System.getProperty("user.dir")
-        var testResourcesDirectory = File(workingDirectoryTheAppIsRunningFrom, "target/classes")
-        var file = File(testResourcesDirectory, "application.properties")
-        FileWriter(file).use { writer ->
+        FileWriter(getMainConfigFile()).use { writer ->
             writer.write("")
         }
 
-        testResourcesDirectory = File(workingDirectoryTheAppIsRunningFrom, "target/test-classes")
-        file = File(testResourcesDirectory, "application.properties")
-        FileWriter(file).use { writer ->
+        FileWriter(getTestConfigFile()).use { writer ->
             writer.write("")
         }
     }
@@ -131,5 +111,17 @@ class DbConnectionProviderIntegrationTest {
 
     private fun thenItShouldReleaseSystemResourcesAfterUsingTheDbConfigurationFile() {
         assertTrue(systemUnderTest!!.isFileClosed(), "System resources have not been released!")
+    }
+
+    private fun getTestConfigFile(): File {
+        val testResourcesDirectory = File(workingDirectoryTheAppIsRunningFrom, "target/test-classes")
+
+        return File(testResourcesDirectory, "application.properties")
+    }
+
+    private fun getMainConfigFile(): File {
+        val testResourcesDirectory = File(workingDirectoryTheAppIsRunningFrom, "target/classes")
+
+        return File(testResourcesDirectory, "application.properties")
     }
 }
