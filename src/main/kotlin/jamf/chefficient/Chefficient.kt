@@ -3,6 +3,7 @@ package jamf.chefficient
 import io.javalin.Javalin
 import io.javalin.apibuilder.ApiBuilder.path
 import io.javalin.apibuilder.ApiBuilder.post
+import io.javalin.apibuilder.ApiBuilder.get
 import io.javalin.openapi.plugin.OpenApiPlugin
 import io.javalin.openapi.plugin.swagger.SwaggerPlugin
 import jamf.chefficient.infrastructure.configuration.BootstrappingService
@@ -34,6 +35,7 @@ class Chefficient(private val bootstrappingService: BootstrappingService) {
         )
 
         config.router.apiBuilder {
+            get("/") { ctx -> ctx.redirect("/swagger") }
             path("recipes") {
                 post(recipeController.create)
             }
