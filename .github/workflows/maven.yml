@@ -9,9 +9,9 @@ jobs:
 
     # Permissions to make "Update dependency graph" step work
     permissions:
-      contents: write
-#      issues: write
-#      pull-requests: write
+#      contents: write
+      issues: write
+      pull-requests: write
 
     # Service containers to run with `runner-job`
     services:
