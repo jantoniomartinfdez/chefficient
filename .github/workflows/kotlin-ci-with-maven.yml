@@ -8,8 +8,8 @@ jobs:
     runs-on: ubuntu-latest
 
     # Permissions to make "Update dependency graph" step work
-#    permissions:
-#      contents: write
+    permissions:
+      contents: write
 
     # Service containers to run with `runner-job`
     services:
