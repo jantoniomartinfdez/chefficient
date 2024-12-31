@@ -3,3 +3,4 @@ target/
 .idea
 chefficient.iml
 src/main/resources/application.properties
+dependency-reduced-pom.xml
