@@ -20,3 +20,9 @@ Glossary of terms:
 	- Inventory: same as "pantry", a.k.a "Food Repository" here.
 	- Food: standalone and concrete edible item, used for one or many ingredients.
 	
+Steps for launching the app:
+	- docker compose up -d
+	- mvn clean package
+	- docker build -t javalin-app .
+	- docker run --network=host javalin-app
+	- Go to http://localhost:7070/
