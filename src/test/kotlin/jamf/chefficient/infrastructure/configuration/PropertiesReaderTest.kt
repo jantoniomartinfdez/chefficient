@@ -29,4 +29,12 @@ class PropertiesReaderTest {
 
         assertEquals("myValue", propertiesReader.getValue("myKey"))
     }
+
+    @Test
+    fun `should show the interpolated environment value of a certain key stored in a file`() {
+        val file = File("src/test/resources/properties_reader_test.properties")
+        val propertiesReader = PropertiesReader.create(file.path)
+
+        assertEquals("myInterpolatedValue", propertiesReader.getValue("myKeyForInterpolation"))
+    }
 }
