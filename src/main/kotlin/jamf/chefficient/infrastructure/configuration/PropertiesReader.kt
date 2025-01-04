@@ -1,8 +1,11 @@
 package jamf.chefficient.infrastructure.configuration
 
+import io.github.cdimascio.dotenv.Dotenv
 import org.apache.commons.configuration2.PropertiesConfiguration
 import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder
 import org.apache.commons.configuration2.builder.fluent.Parameters
+import org.apache.commons.configuration2.interpol.ConfigurationInterpolator
+import org.apache.commons.configuration2.interpol.Lookup
 import java.io.File
 import java.io.FileNotFoundException
 
@@ -15,7 +18,11 @@ class PropertiesReader private constructor(private val configuration: Properties
             builder.configure(Parameters().fileBased())
             builder.configure(Parameters().properties().setFile(file))
 
-            return builder.getConfiguration()
+            val configuration = builder.getConfiguration()
+            val interpolator: ConfigurationInterpolator = configuration.getInterpolator()
+            interpolator.registerLookup("dotenv", DotenvLookup())
+
+            return configuration
         }
 
         fun create(relativePath: String): PropertiesReader {
@@ -30,5 +37,13 @@ class PropertiesReader private constructor(private val configuration: Properties
 
             return PropertiesReader(initializeConfiguration(file))
         }
+    }
+}
+
+internal class DotenvLookup : Lookup {
+    private val dotenv: Dotenv = Dotenv.load()
+
+    override fun lookup(variable: String): Any {
+        return dotenv[variable]!!
     }
 }

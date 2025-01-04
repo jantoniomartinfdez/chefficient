@@ -35,6 +35,6 @@ class PropertiesReaderTest {
         val file = File("src/test/resources/properties_reader_test.properties")
         val propertiesReader = PropertiesReader.create(file.path)
 
-        assertEquals("myInterpolatedValue", propertiesReader.getValue("myKeyForInterpolation"))
+        assertEquals("1234", propertiesReader.getValue("myKeyForInterpolation"))
     }
 }

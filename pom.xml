@@ -283,5 +283,12 @@
       <artifactId>commons-lang3</artifactId>
       <version>3.17.0</version>
     </dependency>
+
+    <!-- To load environment variables from .env files -->
+    <dependency>
+      <groupId>io.github.cdimascio</groupId>
+      <artifactId>java-dotenv</artifactId>
+      <version>5.2.2</version>
+    </dependency>
   </dependencies>
 </project>
