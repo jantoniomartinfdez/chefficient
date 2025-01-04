@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 import java.io.FileNotFoundException
 
-
 class PropertiesReaderTest {
     @Test
     fun `should fail if properties file is not found`() {
@@ -33,6 +32,19 @@ class PropertiesReaderTest {
         val propertiesReader = PropertiesReader.create(PROPERTIES_FILE_PATH)
 
         assertEquals("1234", propertiesReader.getValue("myKeyForInterpolation"))
+    }
+
+    @Test
+    fun `should fail if the interpolated environment value of a certain key does not exist`() {
+        val exception = assertThrows(PropertyNotFound::class.java) {
+            val propertiesReader = PropertiesReader.create(PROPERTIES_FILE_PATH)
+            propertiesReader.getValue("myKeyForNonExistingInterpolation")
+        }
+
+        assertEquals(
+            "The interpolated environment value of key 'NON_EXISTING_ENV_KEY' does not exist!",
+            exception.message
+        )
     }
 
     companion object {
