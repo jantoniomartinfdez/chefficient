@@ -3,7 +3,9 @@ package jamf.chefficient.infrastructure.configuration
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
+import java.io.File
 import java.io.FileNotFoundException
+
 
 class PropertiesReaderTest {
     @Test
@@ -22,8 +24,9 @@ class PropertiesReaderTest {
 
     @Test
     fun `should show the value of a certain key stored in a file`() {
-        val propertiesReader = PropertiesReader("properties_reader_test.properties")
+        val file = File("src/test/resources/properties_reader_test.properties")
+        val propertiesReader = PropertiesReader(file.path)
 
-        assertEquals("myValue", propertiesReader.getValue())
+        assertEquals("myValue", propertiesReader.getValue("myKey"))
     }
 }
