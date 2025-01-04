@@ -47,6 +47,13 @@ class PropertiesReaderTest {
         )
     }
 
+    @Test
+    fun `should default to key's backup if its interpolated environment value does not exist`() {
+        val propertiesReader = PropertiesReader.create(PROPERTIES_FILE_PATH)
+
+        assertEquals("myBackupValue", propertiesReader.getValue("myKeyForNonExistingInterpolationWithBackup"))
+    }
+
     companion object {
         private const val PROPERTIES_FILE_PATH = "src/test/resources/properties_reader_test.properties"
     }
