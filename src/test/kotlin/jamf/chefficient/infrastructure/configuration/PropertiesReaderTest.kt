@@ -12,4 +12,11 @@ class PropertiesReaderTest {
 
         assertEquals("The file unknown_file.properties is not found!", exception.message)
     }
+
+    @Test
+    fun `should fail if properties file is not a file`() {
+        val exception = assertThrows(FileNotReadable::class.java) { PropertiesReader(".") }
+
+        assertEquals("The file '.' is not a file!", exception.message)
+    }
 }
