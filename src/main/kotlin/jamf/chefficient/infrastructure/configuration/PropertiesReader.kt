@@ -9,5 +9,9 @@ class PropertiesReader(relativePath: String) {
         if (!file.exists()) {
             throw FileNotFoundException("The file $relativePath is not found!")
         }
+
+        if (!file.isFile) {
+            throw FileNotReadable("The file '$relativePath' is not a file!")
+        }
     }
 }
