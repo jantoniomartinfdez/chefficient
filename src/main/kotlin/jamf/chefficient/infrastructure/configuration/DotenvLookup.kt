@@ -7,10 +7,21 @@ class DotenvLookup : Lookup {
     private val dotenv: Dotenv = Dotenv.load()
 
     override fun lookup(variable: String): Any {
-        if (dotenv[variable] == null) {
-            throw PropertyNotFound("The interpolated environment value of key '$variable' does not exist!")
+        val arguments = variable.split("|")
+        var envKey = arguments.first()
+        var fallbackValue: String? = null
+        if (arguments.size > 1) {
+            fallbackValue = arguments.last()
         }
 
-        return dotenv[variable]!!
+        if (dotenv[envKey] != null) {
+            return dotenv[envKey]!!
+        }
+
+        if (fallbackValue != null) {
+            return fallbackValue
+        }
+
+        throw PropertyNotFound("The interpolated environment value of key '$envKey' does not exist!")
     }
 }
