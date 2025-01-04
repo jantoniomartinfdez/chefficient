@@ -14,4 +14,8 @@ class PropertiesReader(relativePath: String) {
             throw FileNotReadable("The file '$relativePath' is not a file!")
         }
     }
+
+    fun getValue(): String {
+        return "TODO"
+    }
 }

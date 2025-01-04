@@ -19,4 +19,11 @@ class PropertiesReaderTest {
 
         assertEquals("The file '.' is not a file!", exception.message)
     }
+
+    @Test
+    fun `should show the value of a certain key stored in a file`() {
+        val propertiesReader = PropertiesReader("properties_reader_test.properties")
+
+        assertEquals("myValue", propertiesReader.getValue())
+    }
 }
