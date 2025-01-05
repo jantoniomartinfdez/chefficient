@@ -8,7 +8,7 @@ import java.io.File
 import java.io.FileNotFoundException
 
 class PropertiesReader private constructor(private val configuration: PropertiesConfiguration) {
-    fun getValue(key: String): String = configuration.getString(key)
+    fun getValue(key: String): String? = configuration.getString(key) //TODO: Add test case when returning NULL
 
     companion object {
         private fun initializeConfiguration(file: File): PropertiesConfiguration {
@@ -26,7 +26,7 @@ class PropertiesReader private constructor(private val configuration: Properties
         fun create(relativePath: String): PropertiesReader {
             val file = File(relativePath)
             if (!file.exists()) {
-                throw FileNotFoundException("The file $relativePath is not found!")
+                throw FileNotFoundException("The file ${file.name} is not found!")
             }
 
             if (!file.isFile) {
