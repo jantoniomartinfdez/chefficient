@@ -22,7 +22,6 @@ Glossary of terms:
 	
 Steps for launching the app:
 	- docker compose up -d
-	- mvn clean package
 	- docker build -t javalin-app .
 	- docker run --network=host javalin-app
 	- Go to http://localhost:7070/
