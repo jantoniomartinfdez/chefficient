@@ -22,6 +22,6 @@ Glossary of terms:
 	
 Steps for launching the app:
 	- docker compose up -d
-	- docker build -t javalin-app .
-	- docker run --network=host javalin-app
+	- docker build -t chefficient-app .
+	- docker run --network=host chefficient-app
 	- Go to http://localhost:7070/

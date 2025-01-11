@@ -16,7 +16,7 @@ abstract class BaseBootstrappingService : BootstrappingService {
         // Run Flyway to migrate the database schema
         val flyway = Flyway.configure()
             .dataSource(getDbConnectionProvider().url, getDbConnectionProvider().username, getDbConnectionProvider().password)
-            .locations("filesystem:src/main/resources/flyway/migrations")
+            .locations("classpath:flyway/migrations")
             .load()
         flyway.migrate()
     }
