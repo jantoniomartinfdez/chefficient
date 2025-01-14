@@ -5,7 +5,7 @@ import jamf.chefficient.infrastructure.persistence.DbConnectionProviderFactory
 
 object ProductionBootstrappingService : BaseBootstrappingService(), BootstrappingService {
     override fun getDbConnectionProvider(): DbConnectionProvider {
-        return DbConnectionProviderFactory().fromConfiguration("src/main/resources/application.properties")
+        return DbConnectionProviderFactory().fromConfiguration("config/application.properties")
     }
 
     override fun javalinPort(): Int {

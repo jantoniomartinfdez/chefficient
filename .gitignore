@@ -2,6 +2,6 @@ target/
 .settings/
 .idea
 chefficient.iml
-src/main/resources/application.properties
+config/application.properties
 dependency-reduced-pom.xml
 .env
