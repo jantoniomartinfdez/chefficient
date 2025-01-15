@@ -39,6 +39,18 @@ class RecipeEndToEndTest {
         }
     }
 
+    @Test
+    fun `Given I am not authenticated with valid credentials, when I perform a POST operation, then it should be refused by an unauthorized response`() {
+        JavalinTest.test(app) { _, client ->
+            val recipeJsonRequest = givenIHaveAValidRecipeRequest()
+            val authentication = andIAmAuthenticated("myInvalidUsername", "myInvalidPassword")
+
+            val response = whenIPerformAPostOperation(client, recipeJsonRequest, authentication)
+
+            thenItShouldBeRefusedByAnUnauthorizedResponse(response)
+        }
+    }
+
     private fun givenIHaveAValidRecipeRequest() = """
         {
             "title": "French Omelette",
