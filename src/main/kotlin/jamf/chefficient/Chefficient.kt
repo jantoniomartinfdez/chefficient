@@ -6,6 +6,7 @@ import io.javalin.http.Handler
 import io.javalin.http.UnauthorizedResponse
 import io.javalin.openapi.plugin.OpenApiPlugin
 import io.javalin.openapi.plugin.swagger.SwaggerPlugin
+import io.javalin.security.BasicAuthCredentials
 import jamf.chefficient.infrastructure.configuration.BootstrappingService
 import jamf.chefficient.infrastructure.configuration.ProductionBootstrappingService
 import jamf.chefficient.infrastructure.configuration.ServiceLocator
@@ -22,6 +23,11 @@ class Chefficient(private val bootstrappingService: BootstrappingService) {
 
     private val handleAccess: Handler = Handler { ctx ->
         if (ctx.basicAuthCredentials() == null) {
+            throw UnauthorizedResponse()
+        }
+
+        val basicAuthCredentials = ctx.basicAuthCredentials()
+        if (!basicAuthCredentials!!.equals(BasicAuthCredentials("myUsername", "myPassword"))) {
             throw UnauthorizedResponse()
         }
     }
