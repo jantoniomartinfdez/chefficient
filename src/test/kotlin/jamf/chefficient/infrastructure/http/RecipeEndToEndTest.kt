@@ -21,10 +21,9 @@ class RecipeEndToEndTest {
         JavalinTest.test(app) { _, client ->
             val recipeJsonRequest = givenIHaveAValidRecipeRequest()
             andThatRecipeDoesNotExistYet()
+            val authentication = andIAmAuthenticated("myUsername", "myPassword")
 
-            val basicAuth = Base64.getEncoder().encodeToString(("myUsername:myPassword").toByteArray())
-
-            val response = whenIPerformAPostOperation(client, recipeJsonRequest, basicAuth)
+            val response = whenIPerformAPostOperation(client, recipeJsonRequest, authentication)
 
             thenItShouldBeSuccessfullyStored(response)
         }
@@ -36,13 +35,8 @@ class RecipeEndToEndTest {
 
             val response = whenIPerformAPostOperation(client, recipeJsonRequest)
 
-            assertThat(response.code).isEqualTo(HttpStatus.UNAUTHORIZED.code)
+            thenItShouldBeRefusedByAnUnauthorizedResponse(response)
         }
-    }
-
-    private fun andThatRecipeDoesNotExistYet() {
-        val databaseService = ServiceLocator.getService(DatabaseService::class.qualifiedName!!) as DatabaseService
-        databaseService.truncateTables()
     }
 
     private fun givenIHaveAValidRecipeRequest() = """
@@ -62,9 +56,22 @@ class RecipeEndToEndTest {
         }
     """.trimIndent()
 
-    private fun whenIPerformAPostOperation(client: HttpClient, recipeJsonRequest: String, basicAuth: String? = "") =
-        client.post("/recipes", recipeJsonRequest) { it.header(Header.AUTHORIZATION, "Basic $basicAuth") }
+    private fun andThatRecipeDoesNotExistYet() {
+        val databaseService = ServiceLocator.getService(DatabaseService::class.qualifiedName!!) as DatabaseService
+        databaseService.truncateTables()
+    }
+
+    private fun andIAmAuthenticated(username: String, password: String) =
+        "Basic " + Base64.getEncoder().encodeToString(("$username:$password").toByteArray())
+
+    private fun whenIPerformAPostOperation(client: HttpClient, jsonRequest: String, authentication: String? = null) =
+        client.post("/recipes", jsonRequest) { builder ->
+            authentication?.let { builder.header(Header.AUTHORIZATION, it) }
+        }
 
     private fun thenItShouldBeSuccessfullyStored(response: Response) =
         assertThat(response.code).isEqualTo(HttpStatus.CREATED.code)
+
+    private fun thenItShouldBeRefusedByAnUnauthorizedResponse(response: Response) =
+        assertThat(response.code).isEqualTo(HttpStatus.UNAUTHORIZED.code)
 }
