@@ -9,6 +9,8 @@ object TestBootstrappingService : BaseBootstrappingService(), BootstrappingServi
         return DbConnectionProviderFactory().fromConfiguration("src/test/resources/application.properties")
     }
 
+    override fun getPropertiesFileRelativePath() = "src/test/resources/application.properties"
+
     override fun javalinPort(): Int {
         return 7071
     }

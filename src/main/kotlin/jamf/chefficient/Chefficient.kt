@@ -2,15 +2,13 @@ package jamf.chefficient
 
 import io.javalin.Javalin
 import io.javalin.apibuilder.ApiBuilder.*
-import io.javalin.http.Handler
-import io.javalin.http.UnauthorizedResponse
 import io.javalin.openapi.plugin.OpenApiPlugin
 import io.javalin.openapi.plugin.swagger.SwaggerPlugin
-import io.javalin.security.BasicAuthCredentials
 import jamf.chefficient.infrastructure.configuration.BootstrappingService
 import jamf.chefficient.infrastructure.configuration.ProductionBootstrappingService
 import jamf.chefficient.infrastructure.configuration.ServiceLocator
 import jamf.chefficient.infrastructure.http.controller.RecipeController
+import jamf.chefficient.infrastructure.http.security.AuthenticationHandler
 
 class Chefficient(private val bootstrappingService: BootstrappingService) {
     init {
@@ -21,16 +19,9 @@ class Chefficient(private val bootstrappingService: BootstrappingService) {
         RecipeController::class.qualifiedName!!
     ) as RecipeController
 
-    private val handleAccess: Handler = Handler { ctx ->
-        if (ctx.basicAuthCredentials() == null) {
-            throw UnauthorizedResponse()
-        }
-
-        val basicAuthCredentials = ctx.basicAuthCredentials()
-        if (!basicAuthCredentials!!.equals(BasicAuthCredentials("myUsername", "myPassword"))) {
-            throw UnauthorizedResponse()
-        }
-    }
+    private val authenticationHandler = ServiceLocator.getService(
+        AuthenticationHandler::class.qualifiedName!!
+    ) as AuthenticationHandler
 
     val app: Javalin = Javalin.create { config ->
         config.registerPlugin(
@@ -54,7 +45,7 @@ class Chefficient(private val bootstrappingService: BootstrappingService) {
         }
 
         config.router.mount {
-            it.beforeMatched(handleAccess)
+            it.beforeMatched(authenticationHandler.handle)
         }
     }
 

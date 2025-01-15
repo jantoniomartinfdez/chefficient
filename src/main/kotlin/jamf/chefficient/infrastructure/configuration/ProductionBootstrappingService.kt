@@ -8,6 +8,8 @@ object ProductionBootstrappingService : BaseBootstrappingService(), Bootstrappin
         return DbConnectionProviderFactory().fromConfiguration("config/application.properties")
     }
 
+    override fun getPropertiesFileRelativePath() = "config/application.properties"
+
     override fun javalinPort(): Int {
         return 7070
     }

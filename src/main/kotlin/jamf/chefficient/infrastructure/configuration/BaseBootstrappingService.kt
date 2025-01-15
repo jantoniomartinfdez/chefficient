@@ -2,6 +2,7 @@ package jamf.chefficient.infrastructure.configuration
 
 import jamf.chefficient.application.recipe.command.CreateRecipeCommandHandler
 import jamf.chefficient.infrastructure.http.controller.RecipeController
+import jamf.chefficient.infrastructure.http.security.AuthenticationHandler
 import jamf.chefficient.infrastructure.persistence.DbConnectionProvider
 import jamf.chefficient.infrastructure.persistence.postgresql.RecipeRepository
 import org.flywaydb.core.Flyway
@@ -22,6 +23,8 @@ abstract class BaseBootstrappingService : BootstrappingService {
     }
 
     protected open fun setUpDependencyInjection() {
+        val propertiesReader = PropertiesReader.create(getPropertiesFileRelativePath())
+
         ServiceLocator.registerService(DbConnectionProvider::class.qualifiedName!!, getDbConnectionProvider())
 
         val recipeRepository = RecipeRepository(getDbConnectionProvider())
@@ -35,7 +38,12 @@ abstract class BaseBootstrappingService : BootstrappingService {
 
         val recipeController = RecipeController(createRecipeCommandHandler)
         ServiceLocator.registerService(RecipeController::class.qualifiedName!!, recipeController)
+
+        val authenticationHandler = AuthenticationHandler(propertiesReader)
+        ServiceLocator.registerService(AuthenticationHandler::class.qualifiedName!!, authenticationHandler)
     }
 
     protected abstract fun getDbConnectionProvider(): DbConnectionProvider
+
+    protected abstract fun getPropertiesFileRelativePath(): String
 }
