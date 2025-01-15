@@ -1,9 +1,9 @@
 package jamf.chefficient
 
 import io.javalin.Javalin
-import io.javalin.apibuilder.ApiBuilder.path
-import io.javalin.apibuilder.ApiBuilder.post
-import io.javalin.apibuilder.ApiBuilder.get
+import io.javalin.apibuilder.ApiBuilder.*
+import io.javalin.http.Handler
+import io.javalin.http.UnauthorizedResponse
 import io.javalin.openapi.plugin.OpenApiPlugin
 import io.javalin.openapi.plugin.swagger.SwaggerPlugin
 import jamf.chefficient.infrastructure.configuration.BootstrappingService
@@ -19,6 +19,12 @@ class Chefficient(private val bootstrappingService: BootstrappingService) {
     private val recipeController = ServiceLocator.getService(
         RecipeController::class.qualifiedName!!
     ) as RecipeController
+
+    private val handleAccess: Handler = Handler { ctx ->
+        if (ctx.basicAuthCredentials() == null) {
+            throw UnauthorizedResponse()
+        }
+    }
 
     val app: Javalin = Javalin.create { config ->
         config.registerPlugin(
@@ -39,6 +45,10 @@ class Chefficient(private val bootstrappingService: BootstrappingService) {
             path("recipes") {
                 post(recipeController.create)
             }
+        }
+
+        config.router.mount {
+            it.beforeMatched(handleAccess)
         }
     }
 
