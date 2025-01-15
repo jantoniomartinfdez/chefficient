@@ -25,6 +25,17 @@ class RecipeEndToEndTest {
             thenItShouldBeSuccessfullyStored(response)
         }
 
+    @Test
+    fun `Given I am not authenticated, when I perform a POST operation, then it should be refused by an unauthorized response`() {
+        JavalinTest.test(app) { _, client ->
+            val recipeJsonRequest = givenIHaveAValidRecipeRequest()
+
+            val response = whenIPerformAPostOperation(client, recipeJsonRequest)
+
+            assertThat(response.code).isEqualTo(HttpStatus.UNAUTHORIZED.code)
+        }
+    }
+
     private fun andThatRecipeDoesNotExistYet() {
         val databaseService = ServiceLocator.getService(DatabaseService::class.qualifiedName!!) as DatabaseService
         databaseService.truncateTables()
