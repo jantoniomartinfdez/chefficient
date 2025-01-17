@@ -19,7 +19,8 @@ class RecipeController(private val createRecipeCommandHandler: CreateRecipeComma
             OpenApiResponse("400")
         ],
         path = PATH,
-        methods = [HttpMethod.POST]
+        methods = [HttpMethod.POST],
+        security = [OpenApiSecurity(name = "BasicAuth")]
     )
     val create: Handler = Handler { ctx ->
         try {
