@@ -5,15 +5,17 @@ import io.javalin.testtools.JavalinTest
 import jamf.chefficient.Chefficient
 import jamf.chefficient.infrastructure.configuration.TestBootstrappingService
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
 
 class AuthenticationHandlerEndToEndTest {
     private val app = Chefficient(TestBootstrappingService).app
 
-    @Test
-    fun `Given I am not authenticated, when I access the home page, then it should be shown`() =
+    @ParameterizedTest
+    @ValueSource(strings = ["/", "/swagger"])
+    fun `Given I am not authenticated, when I access the home page, then it should be shown`(path: String) =
         JavalinTest.test(app) { _, client ->
-            val response = client.get("/")
+            val response = client.get(path)
 
             assertThat(response.code).isEqualTo(HttpStatus.OK.code)
         }

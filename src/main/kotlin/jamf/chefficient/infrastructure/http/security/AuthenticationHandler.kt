@@ -15,11 +15,16 @@ class AuthenticationHandler(propertiesReader: PropertiesReader) {
             throw UnauthorizedResponse()
         }
 
-        val basicAuthCredentials = ctx.basicAuthCredentials()
-        val username = propertiesReader.getValue("authentication.username")!!
-        val password = propertiesReader.getValue("authentication.password")!!
-        if (basicAuthCredentials!! != BasicAuthCredentials(username, password)) {
+        val basicAuthCredentials = ctx.basicAuthCredentials()!!
+        val basicAuthCredentialsFromConfiguration = buildBasicAuthCredentialsFromConfiguration(propertiesReader)
+        if (basicAuthCredentials != basicAuthCredentialsFromConfiguration) {
             throw UnauthorizedResponse()
         }
     }
+
+    private fun buildBasicAuthCredentialsFromConfiguration(propertiesReader: PropertiesReader) =
+        BasicAuthCredentials(
+            username = propertiesReader.getValue("authentication.username")!!,
+            password = propertiesReader.getValue("authentication.password")!!
+        )
 }
