@@ -12,7 +12,16 @@ class AuthenticationHandlerEndToEndTest {
     private val app = Chefficient(TestBootstrappingService).app
 
     @ParameterizedTest
-    @ValueSource(strings = ["/", "/swagger"])
+    @ValueSource(
+        strings = [
+            "/",
+            "/swagger",
+            "/webjars/swagger-ui/5.17.14/swagger-ui.css",
+            "/webjars/swagger-ui/5.17.14/swagger-ui-bundle.js",
+            "/webjars/swagger-ui/5.17.14/swagger-ui-standalone-preset.js",
+            "/webjars/swagger-ui/5.17.14/favicon-32x32.png"
+        ]
+    )
     fun `Given I am not authenticated, when I access the home page, then it should be shown`(path: String) =
         JavalinTest.test(app) { _, client ->
             val response = client.get(path)

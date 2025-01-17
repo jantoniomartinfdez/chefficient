@@ -4,10 +4,11 @@ import io.javalin.http.Handler
 import io.javalin.http.UnauthorizedResponse
 import io.javalin.security.BasicAuthCredentials
 import jamf.chefficient.infrastructure.configuration.PropertiesReader
+import jamf.chefficient.infrastructure.http.controller.RecipeController
 
 class AuthenticationHandler(propertiesReader: PropertiesReader) {
     val handle: Handler = Handler { ctx ->
-        if (ctx.path() == "/" || ctx.path() == "/swagger") {
+        if (!ctx.path().contains(RecipeController.PATH)) {
             return@Handler
         }
 

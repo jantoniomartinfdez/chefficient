@@ -18,7 +18,7 @@ class RecipeController(private val createRecipeCommandHandler: CreateRecipeComma
             OpenApiResponse("201"),
             OpenApiResponse("400")
         ],
-        path = "/recipes",
+        path = PATH,
         methods = [HttpMethod.POST]
     )
     val create: Handler = Handler { ctx ->
@@ -41,5 +41,9 @@ class RecipeController(private val createRecipeCommandHandler: CreateRecipeComma
         }
 
         ctx.status(HttpStatus.CREATED.code)
+    }
+
+    companion object {
+        const val PATH = "/recipes"
     }
 }
