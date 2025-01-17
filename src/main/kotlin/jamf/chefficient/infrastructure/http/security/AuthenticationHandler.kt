@@ -7,6 +7,10 @@ import jamf.chefficient.infrastructure.configuration.PropertiesReader
 
 class AuthenticationHandler(propertiesReader: PropertiesReader) {
     val handle: Handler = Handler { ctx ->
+        if (ctx.path() == "/" || ctx.path() == "/swagger") {
+            return@Handler
+        }
+
         if (ctx.basicAuthCredentials() == null) {
             throw UnauthorizedResponse()
         }
