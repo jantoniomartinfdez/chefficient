@@ -1,3 +1,6 @@
+
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/d7f062e5f425451993dff5514fdcc5c2)](https://app.codacy.com/gh/jantoniomartinfdez/chefficient?utm_source=github.com&utm_medium=referral&utm_content=jantoniomartinfdez/chefficient&utm_campaign=Badge_Grade)
+
 Description of the project: Chefficient is designed with the intent of smartly matching recipes to food and vice-versa, with the goal of reducing food waste and save money.
 
 Actors:
